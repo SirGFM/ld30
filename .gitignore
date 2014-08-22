@@ -3,6 +3,9 @@
 *.lnk
 *.exe
 
+cam_*.png
+screen_*.png
+
 # Other files and folders
 .settings/
 
