@@ -1,5 +1,7 @@
 package org.flixel
 {	
+	import utils.Global;
+	import utils.PluginsManager;
 	/**
 	 * This is a useful "generic" Flixel object.
 	 * Both <code>FlxObject</code> and <code>FlxGroup</code> extend this class,
@@ -11,6 +13,10 @@ package org.flixel
 	{
 		static internal var _ACTIVECOUNT:uint;
 		static internal var _VISIBLECOUNT:uint;
+		
+		// NOTE modified here, to siply access
+		static public const plgMngr:PluginsManager = PluginsManager.self;
+		static public const global:Global = Global.self;
 
 		/**
 		 * IDs seem like they could be pretty useful, huh?

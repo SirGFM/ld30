@@ -18,6 +18,7 @@ package plugins {
 		[Embed(source = "../../assets/gfx/moveBt.png")]		private var moveBtGFX:Class;
 		[Embed(source = "../../assets/gfx/atkBt.png")]		private var atkBtGFX:Class;
 		
+		private static const NONE:uint = 0x0000;
 		private static const BEGIN:uint = 0x0001;
 		private static const WAIT:uint = 0x0002;
 		private static const END:uint = 0x0003;
@@ -55,7 +56,19 @@ package plugins {
 		}
 		
 		override public function update():void {
+			if (target == null) {
+				// update the timer
+				time -= FlxG.elapsed;
+				if (time <= 0) {
+					state = NONE;
+					time = 0;
+					exists = false;
+				}
+			}
 			switch(state) {
+				case NONE: {
+					
+				} break;
 				case BEGIN: {
 					// update the timer
 					time += FlxG.elapsed * 2;
@@ -71,8 +84,8 @@ package plugins {
 					// update the timer
 					time -= FlxG.elapsed * 2;
 					if (time <= 0) {
-						time = 0;
-						exists = false;
+						time = 0.3;
+						target = null;
 					}
 					// Tween the objects position
 					tween(moveBT, center, moveBtTgt, time);
@@ -103,8 +116,6 @@ package plugins {
 						if (!text.visible) {
 							text.visible = true;
 							text.text = "Click to move";
-							// clear the others state
-							atkBT.clear();
 						}
 						else if (didClick()) {
 							target.setMove(FlxG.mouse.x, FlxG.mouse.y);
@@ -116,8 +127,9 @@ package plugins {
 						if (!text.visible) {
 							text.visible = true;
 							text.text = "Select a target to attack";
-							// clear the others state
-							moveBT.clear();
+						}
+						else if (global.clickedEntity != target) {
+							target.setAttack(global.clickedEntity);
 						}
 					}
 					else {
@@ -128,8 +140,10 @@ package plugins {
 		}
 		
 		override public function draw():void {
-			moveBT.draw();
-			atkBT.draw();
+			if (target != null) {
+				moveBT.draw();
+				atkBT.draw();
+			}
 			if (text.visible)
 				text.draw();
 		}
@@ -140,6 +154,9 @@ package plugins {
 		 * @param	e
 		 */
 		public function wakeup(e:Entity):void {
+			if (state == END) {
+				return;
+			}
 			target = e;
 			state = BEGIN;
 			exists = true;
@@ -148,10 +165,10 @@ package plugins {
 			
 			// Set moveBt's position when tweening
 			moveBtTgt.x = center.x - 48;
-			moveBtTgt.y = center.y;
+			moveBtTgt.y = center.y + 32;
 			// Set atkBt's position when tweening
 			atkBtTgt.x = center.x + 48;
-			atkBtTgt.y = center.y;
+			atkBtTgt.y = center.y + 32;
 			
 			time = 0;
 			FlxG.paused = true;
@@ -162,7 +179,6 @@ package plugins {
 		
 		public function sleep():void {
 			// Clear state
-			target = null;
 			state = END;
 			time = 1;
 			FlxG.paused = false;
