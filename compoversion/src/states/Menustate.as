@@ -1,4 +1,4 @@
-package  {
+package states {
 	
 	import org.flixel.FlxState;
 	import utils.textmenu.HorizontalOption;

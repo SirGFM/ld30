@@ -364,7 +364,8 @@ package org.flixel
 		 */
 		override public function postUpdate():void
 		{
-			if(moves)
+			// NOTE: modified here!! (so animation continue on pause)
+			if(moves && !FlxG.paused)
 				updateMotion();
 			
 			wasTouching = touching;

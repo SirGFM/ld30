@@ -4,12 +4,15 @@ package {
 	import flash.events.Event;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGame;
+	import plugins.PluginsManager;
+	import states.Menustate;
+	import states.Playstate;
 	import utils.SFX;
 	
 	// Game link:
 	// https://dl.dropboxusercontent.com/u/55733901/LD48/ld30/gfm_ld30.html
 	
-	[SWF(width="500",height="500",backgroundColor="0x000000")]
+	[SWF(width="640",height="480",backgroundColor="0x000000")]
 	[Frame(factoryClass="Preloader")]
 	/**
 	 * ...
@@ -21,7 +24,8 @@ package {
 		private var logo:LogoGFM;
 		
 		public function Main():void {
-			super(250, 250, Menustate, 2, 60, 60);
+			//super(250, 250, Menustate, 2, 60, 60);
+			super(320, 240, Playstate, 2, 60, 30, true);
 			
 			logo = null;
 			return;
@@ -46,6 +50,7 @@ package {
 			
 			super.create(FlashEvent);
 			sfx.init();
+			PluginsManager.init();
 		}
 		
 		override protected function onFocus(FlashEvent:Event = null):void {

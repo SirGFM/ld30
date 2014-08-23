@@ -6,6 +6,8 @@
 cam_*.png
 screen_*.png
 
+promo/*.png
+
 # Other files and folders
 .settings/
 

@@ -1,0 +1,86 @@
+#==========================================================#
+#                                                          #
+# LD 30 - Theme: CONNECTED WORLDS                          #
+#                                                          #
+#==========================================================#
+
+------------------------------------------------------------
+
+  Nice, sprites!! =D
+  I'll brb, then on to code some of the game. Hopefully I'll
+have all the base code done by today (until I sleep), so I
+make the game itself tomorrow (after I sleep XD) and polish
+on sunday.
+
+------------------------------------------------------------
+
+  I wanna try some gfx I drew on the paper... then, on to 
+code something! /o/
+
+------------------------------------------------------------
+
+  (NOOO, stop playing megaman 2... don't make me want to
+play it >_<)
+
+  There are three worlds:
+   - Light world
+   - Dark world
+   - Nether world
+  Yep, pretty default stuff...
+  I don't really care right now if they are planes or actual
+planets... BUT! someway or another light and dark has always 
+been connected. Each race (light'ans dark'ans [dark'an
+actually sounds cool... and like something that should
+already exist XD]) didn't actually care about the other, but
+neither they liked each other.
+  For some time, both has been attacked by weird creatures
+and they've started blaming each other. The real culprit,
+though, are beings from the nether world (nether'ans... lame
+=/). After each battle (which you play, alternatively
+between light and dark people), you find an object left
+behind by the other race and you must show it to your ruler
+and decide if it's a proof that they were trying to attack
+you or simply defending their selves (something like this).
+  After the final battle (would be nice if both races
+battled together...), the rulers of each world decide what
+to do:
+   - wage war on the other race
+   - deem them as pacific and try to reach an agreement
+  If only one of them wages war, the other is destroyed; if
+both wage war, the nether race appear and finish off both;
+if both try to reach an agreement, they live peacefully
+thereafter.
+
+  Well, this is pretty much what the game is about. I REALLY
+FRIGGIN' LIKED IT! XD
+  And to think I called this theme lame just a few minutes
+ago... XD
+
+------------------------------------------------------------
+
+  Ok, I have this nice action/platformer game idea that uses
+the theme in a simple but nice way... I can also set up some
+nice mood (and 3 endings /o/)
+  I'd normally brainstorm more... but I'll try to go with
+that... let's see what happens (better XD)
+
+------------------------------------------------------------
+
+  I hadn't realized that this theme could be used with life/
+death... that can also be a form of connected worlds... I
+wonder how many games about that there will be.
+
+------------------------------------------------------------
+
+  Connected worlds gives me an idea of two (or more) worlds
+literally connecteds... but I don't wanna follow that idea...
+Also, light/dark world... thought it has been done a lot...
+
+------------------------------------------------------------
+
+  Seriously? Well I think this is my reaction to pretty much 
+every theme (except for 10 seconds XD)
+
+------------------------------------------------------------
+
+Gonna sleep for some ours prior to the jam...
