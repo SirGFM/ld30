@@ -11,6 +11,7 @@ package states {
 	import org.flixel.FlxState;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
+	import utils.PathFind;
 	
 	/**
 	 * ...
@@ -41,8 +42,12 @@ package states {
 			bg = new FlxTilemap();
 			bg.loadMap(str, tmGFX, 16, 16, FlxTilemap.OFF, 0, 0, 1);
 			bg.immovable = true;
+			bg.ignoreDrawDebug = true;
 			add(bg);
+			
 			FlxG.worldBounds.make(0, 0, bg.width, FlxG.height);
+			
+			var pf:PathFind = new PathFind(bg.getData(true), bg.widthInTiles, bg.heightInTiles, 16, 16);
 			
 			ent = new NWSlime();
 			ent.reset(240, 400-16);
