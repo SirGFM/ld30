@@ -44,10 +44,12 @@ package states {
 			bg.immovable = true;
 			bg.ignoreDrawDebug = true;
 			add(bg);
+			global.floor = 400;
 			
 			FlxG.worldBounds.make(0, 0, bg.width, FlxG.height);
 			
-			var pf:PathFind = new PathFind(bg.getData(true), bg.widthInTiles, bg.heightInTiles, 16, 16);
+			var pf:PathFind = new PathFind(bg.getData(true), bg.widthInTiles, bg.heightInTiles, 16, 16, 64, 128);
+			global.pathfind = pf;
 			
 			ent = new NWSlime();
 			ent.reset(240, 400-16);
@@ -79,6 +81,9 @@ package states {
 		override public function destroy():void {
 			super.destroy();
 			global.playstate = null;
+			if (global.pathfind)
+				global.pathfind.destroy();
+			global.pathfind = null;
 		}
 		
 		override public function update():void {

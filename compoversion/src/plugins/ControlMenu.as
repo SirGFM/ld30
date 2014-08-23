@@ -72,6 +72,7 @@ package plugins {
 			text = new FlxText(0, 16, FlxG.width, "");
 			text.setFormat(null, 8, 0xffffff, "center", 0xaadddddd);
 			text.visible = false;
+			text.scrollFactor.make();
 		}
 		
 		override public function update():void {
@@ -181,7 +182,10 @@ package plugins {
 							text.text = "Click to move";
 						}
 						else if (didClick()) {
-							target.setMove(FlxG.mouse.x, FlxG.mouse.y);
+							var arr:Array = global.pathfind.pathToMouse(target.x, target.y);
+							if (arr == null) {
+								target.setMove(FlxG.mouse.x, global.floor - target.height);
+							}
 							text.visible = false;
 							sleep();
 						}
