@@ -1,5 +1,7 @@
 package objs.base {
 	
+	import objs.Bullet;
+	import objs.MeeleeProj;
 	import org.flixel.FlxG;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxU;
@@ -15,6 +17,15 @@ package objs.base {
 		 * Gravity's acceleration
 		 */
 		static public const grav:Number = 500;
+		
+		/**
+		 * ID for any character
+		 */
+		static public const MOB:uint = 0x01;
+		/**
+		 * ID for projectiles
+		 */
+		static public const PROJ:uint = 0x02;
 		
 		/**
 		 * Type that defines an entity as a dark'an
@@ -42,9 +53,13 @@ package objs.base {
 		 */
 		static public const ATTACK:uint = 0x0003;
 		/**
-		 * Who knows if will exist...
+		 * The entity stand still
 		 */
-		static public const ASSIST:uint = 0x0004;
+		static public const STAND:uint = 0x0004;
+		/**
+		 * The entity jumps forward
+		 */
+		static public const JUMP:uint = 0x0005;
 		
 		/**
 		 * Current action
@@ -53,15 +68,15 @@ package objs.base {
 		/**
 		 * Current entity being target; used by action attack
 		 */
-		private var _target:FlxSprite;
+		private var _target:Entity;
 		/**
 		 * Direction that should move to
 		 */
-		private var _movetoX:int;
+		protected var _movetoX:int;
 		/**
 		 * Direction that should move to
 		 */
-		private var _movetoY:int;
+		protected var _movetoY:int;
 		/**
 		 * Used to detect if this entity was clicked
 		 */
@@ -82,26 +97,57 @@ package objs.base {
 		/**
 		 * How close can an enemy be and still be shot
 		 */
-		private var _maxdist:Number;
+		protected var _maxdist:Number;
+		/**
+		 * How much damage this entity causes
+		 */
+		protected var _dmg:Number;
+		private var _atkDelay:Number;
+		private var colorTime:Number;
+		protected var isMeelee:Boolean;
+		protected var canClick:Boolean;
 		
-		public function Entity(X:Number=0, Y:Number=0, SimpleGraphic:Class=null) {
+		public function Entity(X:Number=0, Y:Number=0, SimpleGraphic:Class=null, atkDelay:Number = 1) {
 			super(X, Y, SimpleGraphic);
 			speed = 100;
 			maxdist = 64;
+			ID = MOB;
+			health = 5;
+			isMeelee = false;
+			_atkDelay = atkDelay;
+			canClick = true;
 		}
 		
 		override public function reset(X:Number, Y:Number):void {
 			super.reset(X, Y);
 			_action = NONE;
 			clickFlag = false;
+			_time = FlxG.random() * 10;
+			FlxG.log("time to AI: " + _time);
+			colorTime = 0;
 		}
 		
 		override public function update():void {
+			// Make entity flash when hit
+			if (colorTime > 0) {
+				var c:uint;
+				colorTime -= FlxG.elapsed;
+				if (colorTime < 0) {
+					colorTime = 0;
+					color = 0xffffff;
+				}
+				else {
+					c = 0xff & (0xff * 4 * (0.25 - colorTime));
+					color = 0xff0000 + (c << 8) + c;
+				}
+			}
 			// On click, if can be clicked, must open the options menu!!
 			if (didClick()) {
 				global.clickedEntity = this;
 				
-				if (plgMngr.controlMenu.exists) {
+				if (!canClick)
+					{} // do nothing
+				else if (plgMngr.controlMenu.exists) {
 					var isDif:Boolean = plgMngr.controlMenu.isDifferentTarget(this);
 					if (plgMngr.controlMenu.querySelect() && isDif) {
 						// do nothing, will use this inside the menu
@@ -109,13 +155,12 @@ package objs.base {
 					// If selected a different target, switch)
 					else if (isDif)
 						plgMngr.controlMenu.wakeup(this);
-					// Thus, clicked on itself
-					else
-						plgMngr.controlMenu.sleep();
 				}
 				else
 					plgMngr.controlMenu.wakeup(this);
 			}
+			if (FlxG.paused)
+				return;
 			// Then, 
 			switch (_action) {
 				case NONE: {
@@ -129,7 +174,7 @@ package objs.base {
 					 || velocity.x < 0 && _movetoX >= x) {
 						// Make it stop using drag (so it slide slightly)
 						action = NONE;
-						drag.x = grav;
+						drag.x = grav*2;
 					}
 				} break;
 				case ATTACK: {
@@ -139,25 +184,24 @@ package objs.base {
 						var dist:Number = FlxU.abs(x - _target.x);
 						dist *= dist;
 						if (_maxdist >= dist) {
-							drag.x = grav;
+							drag.x = grav*2;
+							if (_target.x > x)
+								facing = RIGHT;
+							else if (_target.x < x)
+								facing = LEFT;
 							_time -= FlxG.elapsed;
+							play("attack");
 							if (_time <= 0) {
 								var p:Projectile;
-								_time += 1;
-								p = global.playstate.recycle(Projectile) as Projectile;
-								p.reset(x + width / 2, y + height / 2);
-								if (_target.x > x) {
-									p.velocity.x = speed;
-									p.drag.x = 0;
-									p.drag.y = 0;
+								_time += _atkDelay;
+								if (!isMeelee)
+									p = global.playstate.recycle(Bullet) as Projectile;
+								else {
+									p = global.playstate.recycle(MeeleeProj) as Projectile;
+									p.dmg = dmg;
 								}
-								else if (_target.x < x) {
-									p.velocity.x = -speed;
-									p.drag.x = 0;
-									p.drag.y = 0;
-								}
+								p.start(x + width / 2, y + height / 2, facing, _type);
 							}
-							
 						}
 						else if (_target.x > x) {
 							velocity.x = speed;
@@ -169,12 +213,25 @@ package objs.base {
 						}
 					}
 				} break;
+				case JUMP: {
+					if (_time > 0)
+						_time -= FlxG.elapsed;
+					else if ((touching & DOWN)) {
+						action = NONE;
+						drag.x = grav*2;
+					}
+				} break;
 			}
 			if (velocity.x > 0)
 				facing = RIGHT;
 			else if (velocity.x < 0)
 				facing = LEFT;
 			super.update();
+		}
+		
+		override public function postUpdate():void {
+			if (!FlxG.paused)
+				super.postUpdate();
 		}
 		
 		public function setMove(X:Number, Y:Number):void {
@@ -193,7 +250,7 @@ package objs.base {
 			drag.x = 0;
 		}
 		
-		protected function canAttack(e:Entity):Boolean {
+		public function canAttack(e:Entity):Boolean {
 			return e._type != _type;
 		}
 		
@@ -207,22 +264,47 @@ package objs.base {
 			plgMngr.controlMenu.sleep();
 		}
 		
-		public function doAIAction():void {
-			_time += 5;
+		public function setStand():void {
+			action = STAND;
+			drag.x = grav;
+		}
+		public function setJump():void {
+			if (!(touching & DOWN))
+				return;
+			action = JUMP;
+			if (facing == RIGHT)
+				velocity.x = speed;
+			else if (facing == LEFT)
+				velocity.x = -speed;
+			velocity.y = -grav / 2;
+			drag.x = 0;
+			_time = 0.1;
 		}
 		
-		private function get action():uint {
+		public function doAIAction(time:Number=5):void {
+			_time += time;
+		}
+		
+		public function get action():uint {
 			return _action;
 		}
-		private function set action(val:uint):void {
+		public function set action(val:uint):void {
 			_action = val;
-			// Set how long until AI take control of the char
-			if (val == NONE)
-				_time = 5;
-			if (val == ATTACK)
-				_time = 0;
+			if (val == NONE) {
+				play("stand");
+				_time += FlxG.random() * 3;
+			}
+			else if (val == STAND) {
+				play("stand");
+			}
+			else if (val == MOVE) {
+				play("move");
+			}
+			if (val == ATTACK) {
+				play("move");
+				_time = _atkDelay;
+			}
 		}
-		
 		
 		private function didClick():Boolean {
 			if (!overlapsPoint(FlxG.mouse, true))
@@ -245,6 +327,32 @@ package objs.base {
 		}
 		protected function get maxdist():Number {
 			return Math.sqrt(_maxdist);
+		}
+		
+		public function get dmg():Number {
+			return _dmg;
+		}
+		public function set dmg(val:Number):void {
+			_dmg = val;
+		}
+		
+		public function getTarget():Entity {
+			return _target;
+		}
+		
+		override public function hurt(Damage:Number):void {
+			super.hurt(Damage);
+			colorTime = 0.25;
+		}
+		
+		override public function kill():void {
+			if (alive && ID != PROJ) {
+				if (type == NW)
+					global.playstate.enCount--;
+				else if (type == global.type)
+					global.playstate.plCount--;
+			}
+			super.kill();
 		}
 	}
 }

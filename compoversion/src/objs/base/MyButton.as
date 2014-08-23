@@ -87,6 +87,10 @@ package objs.base {
 			return _waspressed && !_pressed;
 		}
 		
+		public function isOver():Boolean {
+			return state == OVER;
+		}
+		
 		public function clear():void {
 			state = NONE;
 			_pressed = false;

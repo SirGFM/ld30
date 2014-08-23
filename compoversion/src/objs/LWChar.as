@@ -1,6 +1,8 @@
 package objs {
 	
 	import objs.base.Entity;
+	import org.flixel.FlxG;
+	import org.flixel.FlxU;
 	
 	/**
 	 * ...
@@ -16,6 +18,21 @@ package objs {
 			loadGraphic(lw_char_01GFX, true, true, 32, 32);
 			
 			_type = LW;
+		}
+		
+		override public function doAIAction(time:Number = 5):void {
+			var e:Entity = global.playstate.getClosestEnemy(this, 64*64);
+			if (!e) {
+				var tgt:Number = x + (FlxU.floor(FlxG.random() * 100 % 16 - 8) * 8);
+				if (tgt < 0)
+					tgt = 16;
+				setMove(tgt, y);
+				FlxG.log("x: "+x+" move to: " + _movetoX);
+			}
+			else {
+				FlxG.log("attacK!");
+				setAttack(e);
+			}
 		}
 	}
 }

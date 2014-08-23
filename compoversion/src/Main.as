@@ -25,7 +25,7 @@ package {
 		
 		public function Main():void {
 			//super(250, 250, Menustate, 2, 60, 60);
-			super(320, 240, Playstate, 2, 60, 30, true);
+			super(640, 480, Playstate, 1, 60, 30, true);
 			
 			logo = null;
 			return;

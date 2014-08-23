@@ -12,6 +12,10 @@ package utils {
 		
 		public var clickedEntity:Entity = null;
 		public var playstate:Playstate = null;
+		/**
+		 * Which type are we playing as (defaults to dark world)
+		 */
+		public var type:uint = 0;
 		
 	}
 }
