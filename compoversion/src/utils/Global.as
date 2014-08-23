@@ -16,6 +16,7 @@ package utils {
 		 * Which type are we playing as (defaults to dark world)
 		 */
 		public var type:uint = 0;
+		public var qwerty:Boolean = true;
 		
 	}
 }

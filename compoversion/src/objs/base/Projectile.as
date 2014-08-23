@@ -19,7 +19,7 @@ package objs.base {
 		override public function update():void {
 			super.update();
 			// TODO decide where is OOB
-			if (x < 0 || x > FlxG.width)
+			if (x < 0 || x > FlxG.worldBounds.width)
 				kill();
 		}
 		

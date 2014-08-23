@@ -6,6 +6,31 @@
 
 ------------------------------------------------------------
 
+  Gosh, I'll have to fix those controls... it's horrible >_<
+
+------------------------------------------------------------
+
+  It's been a while since my last commit... Better do it now
+
+------------------------------------------------------------
+
+  Lunch
+  
+  BACK!!
+
+------------------------------------------------------------
+
+  Gotta stop coding for a while and plan what I'm goint to
+do next... I should probably implement the playstate
+mechanic, then I can go back to adding content.
+
+------------------------------------------------------------
+
+  I need to be able to detect characters that are close to
+each other to implement the AI... let's see how that works...
+
+------------------------------------------------------------
+
   I don't what happened earlier, but it seems to be fine
 now... '-'
   On a side note it's possible to attack!!!!

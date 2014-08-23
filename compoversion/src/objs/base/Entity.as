@@ -16,7 +16,7 @@ package objs.base {
 		/**
 		 * Gravity's acceleration
 		 */
-		static public const grav:Number = 500;
+		static public const grav:Number = 550;
 		
 		/**
 		 * ID for any character
@@ -170,6 +170,10 @@ package objs.base {
 				} break;
 				case MOVE: {
 					// Check if reached position
+					if (facing == RIGHT)
+						velocity.x = speed;
+					else if (facing == LEFT)
+						velocity.x = -speed;
 					if (velocity.x > 0 && _movetoX <= x
 					 || velocity.x < 0 && _movetoX >= x) {
 						// Make it stop using drag (so it slide slightly)
@@ -214,6 +218,10 @@ package objs.base {
 					}
 				} break;
 				case JUMP: {
+					if (facing == RIGHT)
+						velocity.x = speed;
+					else if (facing == LEFT)
+						velocity.x = -speed;
 					if (_time > 0)
 						_time -= FlxG.elapsed;
 					else if ((touching & DOWN)) {
@@ -242,10 +250,14 @@ package objs.base {
 			_movetoY = Y;
 			
 			// Set horizontal velocity
-			if (X > x)
+			if (X > x) {
 				velocity.x = speed;
-			else
+				facing = RIGHT;
+			}
+			else {
 				velocity.x = -speed;
+				facing = LEFT;
+			}
 			// Clear drag (so it'll indeed move)
 			drag.x = 0;
 		}
@@ -276,13 +288,13 @@ package objs.base {
 				velocity.x = speed;
 			else if (facing == LEFT)
 				velocity.x = -speed;
-			velocity.y = -grav / 2;
+			velocity.y = -grav / 1.7;
 			drag.x = 0;
 			_time = 0.1;
 		}
 		
-		public function doAIAction(time:Number=5):void {
-			_time += time;
+		public function doAIAction():void {
+			
 		}
 		
 		public function get action():uint {

@@ -9,6 +9,7 @@ package states {
 	import org.flixel.FlxObject;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
+	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
 	
 	/**
@@ -17,6 +18,10 @@ package states {
 	 */
 	public class Playstate extends FlxState {
 		
+		[Embed(source = "../../assets/gfx/tmp_tm.png")]		private var tmGFX:Class;
+		[Embed(source = "../../assets/maps/bg-map.txt", mimeType = "application/octet-stream")]	private var tmData:Class;
+		
+		private var bg:FlxTilemap;
 		private var world:FlxSprite;
 		public var level:int = 0;
 		
@@ -27,10 +32,17 @@ package states {
 			var ent:Entity;
 			global.playstate = this;
 			
-			world = new FlxSprite(0, 400);
-			world.makeGraphic(FlxG.width, FlxG.height - world.y);
-			world.immovable = true;
-			add(world);
+			//world = new FlxSprite(0, 400);
+			//world.makeGraphic(FlxG.width, FlxG.height - world.y);
+			//world.immovable = true;
+			//add(world);
+			
+			var str:String = new tmData;
+			bg = new FlxTilemap();
+			bg.loadMap(str, tmGFX, 16, 16, FlxTilemap.OFF, 0, 0, 1);
+			bg.immovable = true;
+			add(bg);
+			FlxG.worldBounds.make(0, 0, bg.width, FlxG.height);
 			
 			ent = new NWSlime();
 			ent.reset(240, 400-16);
@@ -40,6 +52,8 @@ package states {
 			ent.reset(16, 64);
 			ent.acceleration.y = Entity.grav;
 			add(ent);
+			
+			FlxG.watch(FlxG.camera.scroll, "x");
 			/*
 			ent = new LWChar();
 			ent.reset(32, 64);
@@ -63,6 +77,25 @@ package states {
 		}
 		
 		override public function update():void {
+			// Camera movement
+			if (FlxG.keys.LEFT || (global.qwerty && FlxG.keys.A) || (!global.qwerty && FlxG.keys.Q)) {
+				FlxG.camera.scroll.x -= 300 * FlxG.elapsed;
+				// Double movement speed when shift is pressed
+				if (FlxG.keys.SHIFT)
+					FlxG.camera.scroll.x -= 300 * FlxG.elapsed;
+				// Limit the camera to world space
+				if (FlxG.camera.scroll.x < 0)
+					FlxG.camera.scroll.x = 0;
+			}
+			else if (FlxG.keys.RIGHT || FlxG.keys.D) {
+				FlxG.camera.scroll.x += 300 * FlxG.elapsed;
+				// Double movement speed when shift is pressed
+				if (FlxG.keys.SHIFT)
+					FlxG.camera.scroll.x += 300 * FlxG.elapsed;
+				// Limit the camera to world space
+				if (FlxG.camera.scroll.x > FlxG.worldBounds.width - FlxG.camera.width)
+					FlxG.camera.scroll.x = FlxG.worldBounds.width - FlxG.camera.width;
+			}
 			// update logic
 			super.update();
 			// collide (this may modify the position)

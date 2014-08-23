@@ -25,7 +25,7 @@ package objs.nw {
 			dmg = 0.5;
 		}
 		
-		override public function doAIAction(time:Number = 5):void {
+		override public function doAIAction():void {
 			var X:Number = x + FlxG.random() * 100;
 			
 			if (X < 0)
@@ -34,7 +34,6 @@ package objs.nw {
 				X = FlxG.width - 16;
 			
 			setMove(X, y);
-			super.doAIAction(time);
 		}
 		
 		override public function hurt(Damage:Number):void {

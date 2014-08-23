@@ -20,7 +20,7 @@ package objs {
 			_type = LW;
 		}
 		
-		override public function doAIAction(time:Number = 5):void {
+		override public function doAIAction():void {
 			var e:Entity = global.playstate.getClosestEnemy(this, 64*64);
 			if (!e) {
 				var tgt:Number = x + (FlxU.floor(FlxG.random() * 100 % 16 - 8) * 8);
