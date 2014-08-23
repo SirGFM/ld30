@@ -2,7 +2,8 @@ package objs.base {
 	
 	import org.flixel.FlxG;
 	import org.flixel.FlxSprite;
-	import plugins.PluginsManager;
+	import utils.Global;
+	import utils.PluginsManager;
 	
 	/**
 	 * ...
@@ -11,6 +12,7 @@ package objs.base {
 	public class Entity extends FlxSprite {
 		
 		static public const plgMngr:PluginsManager = PluginsManager.self;
+		static public const global:Global = Global.self;
 		
 		static public const grav:Number = 500;
 		
@@ -25,6 +27,8 @@ package objs.base {
 		private var _target:FlxSprite;
 		private var _movetoX:int;
 		private var _movetoY:int;
+		
+		private var _time:Number;
 		
 		protected var speed:Number;
 		
@@ -41,6 +45,8 @@ package objs.base {
 		override public function update():void {
 			// On click, if can be clicked, must open the options menu!!
 			if (FlxG.mouse.justPressed() && overlapsPoint(FlxG.mouse, true)) {
+				global.clickedEntity = this;
+				
 				if (!plgMngr.controlMenu.exists || plgMngr.controlMenu.isDifferentTarget(this)) {
 					plgMngr.controlMenu.wakeup(this);
 				}
@@ -50,12 +56,17 @@ package objs.base {
 			}
 			// Then, 
 			switch (_action) {
+				case NONE: {
+					_time -= FlxG.elapsed;
+					if (_time <= 0)
+						doAIAction();
+				}
 				case MOVE:
 					// Check if reached position
 					if (velocity.x > 0 && _movetoX <= x
 					 || velocity.x < 0 && _movetoX >= x) {
 						// Make it stop using drag (so it slide slightly)
-						_action = NONE;
+						action = NONE;
 						drag.x = grav;
 					}
 				break;
@@ -65,7 +76,7 @@ package objs.base {
 		
 		public function setMove(X:Number, Y:Number):void {
 			// Set current action
-			_action = MOVE;
+			action = MOVE;
 			// Set target position
 			_movetoX = X;
 			_movetoY = Y;
@@ -77,6 +88,20 @@ package objs.base {
 				velocity.x = -speed;
 			// Clear drag (so it'll indeed move)
 			drag.x = 0;
+		}
+		
+		public function doAIAction():void {
+			_time += 5;
+		}
+		
+		private function get action():uint {
+			return _action;
+		}
+		private function set action(val:uint):void {
+			_action = val;
+			// Set how long until AI take control of the char
+			if (val == NONE)
+				_time = 5;
 		}
 	}
 }

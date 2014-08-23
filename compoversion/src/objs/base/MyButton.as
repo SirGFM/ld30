@@ -14,6 +14,7 @@ package objs.base {
 		
 		private var state:uint;
 		private var _pressed:Boolean;
+		private var _waspressed:Boolean;
 		private var hasGFX:Boolean;
 		
 		public function MyButton(X:Number=0, Y:Number=0, SimpleGraphic:Class=null) {
@@ -26,6 +27,7 @@ package objs.base {
 		}
 		
 		override public function update():void {
+			_waspressed = _pressed;
 			var over:Boolean = overlapsPoint(FlxG.mouse, true);
 			if (_pressed) {
 				if (over && FlxG.mouse.justPressed()) {
@@ -73,6 +75,16 @@ package objs.base {
 		
 		public function get pressed():Boolean {
 			return _pressed;
+		}
+		public function get waspressed():Boolean {
+			return _waspressed;
+		}
+		
+		public function justPressed():Boolean {
+			return !_waspressed && _pressed;
+		}
+		public function justReleased():Boolean {
+			return _waspressed && !_pressed;
 		}
 		
 		public function clear():void {

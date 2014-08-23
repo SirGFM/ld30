@@ -1,5 +1,7 @@
-package plugins {
+package utils {
+	
 	import org.flixel.FlxG;
+	import plugins.ControlMenu;
 	/**
 	 * ...
 	 * @author 
@@ -12,9 +14,9 @@ package plugins {
 		
 		public var controlMenu:ControlMenu;
 		
-		
 		public function start():void {
-			controlMenu = new ControlMenu();
+			if (!controlMenu)
+				controlMenu = new ControlMenu();
 			
 			FlxG.addPlugin(controlMenu);
 		}

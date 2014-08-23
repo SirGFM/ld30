@@ -4,7 +4,7 @@ package {
 	import flash.events.Event;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGame;
-	import plugins.PluginsManager;
+	import utils.PluginsManager;
 	import states.Menustate;
 	import states.Playstate;
 	import utils.SFX;

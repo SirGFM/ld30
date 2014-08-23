@@ -16,6 +16,7 @@ package plugins {
 	public class ControlMenu extends FlxBasic {
 		
 		[Embed(source = "../../assets/gfx/moveBt.png")]		private var moveBtGFX:Class;
+		[Embed(source = "../../assets/gfx/atkBt.png")]		private var atkBtGFX:Class;
 		
 		private static const BEGIN:uint = 0x0001;
 		private static const WAIT:uint = 0x0002;
@@ -23,11 +24,14 @@ package plugins {
 		
 		private var state:uint;
 		private var moveBT:MyButton;
+		private var atkBT:MyButton;
 		
 		private var center:FlxPoint;
 		private var moveBtTgt:FlxPoint;
+		private var atkBtTgt:FlxPoint;
 		private var time:Number;
 		private var target:Entity;
+		private var clickFlag:Boolean;
 		
 		private var text:FlxText;
 		
@@ -38,9 +42,12 @@ package plugins {
 			
 			moveBT = new MyButton();
 			moveBT.loadGraphic(moveBtGFX, true, false, 32, 32);
+			atkBT = new MyButton();
+			atkBT .loadGraphic(atkBtGFX, true, false, 32, 32);
 			
 			center = new FlxPoint();
 			moveBtTgt = new FlxPoint();
+			atkBtTgt = new FlxPoint();
 			
 			text = new FlxText(0, FlxG.height - 16, FlxG.width, "");
 			text.setFormat(null, 8, 0xdddddd, "center", 0xaaaaaaaa);
@@ -58,6 +65,7 @@ package plugins {
 					}
 					// Tween the objects position
 					tween(moveBT, center, moveBtTgt, time);
+					tween(atkBT, center, atkBtTgt, time);
 				} break;
 				case END: {
 					// update the timer
@@ -68,24 +76,48 @@ package plugins {
 					}
 					// Tween the objects position
 					tween(moveBT, center, moveBtTgt, time);
+					tween(atkBT, center, atkBtTgt, time);
 				} break;
 				default: {
 					if (!target) {
-						FlxG.log("@ControlMenu.as:~74 - ERROR: target = null");
+						FlxG.log("@ControlMenu.as:~82 - ERROR: target = null");
 						exists = false;
 						FlxG.paused = false;
 					}
+					// Update every button
 					moveBT.update();
+					atkBT.update();
+					// Clear any state
+					if (moveBT.justPressed()) {
+						atkBT.clear();
+						text.visible = false;
+						clickFlag = false;
+					}
+					else if (atkBT.justPressed()) {
+						moveBT.clear();
+						text.visible = false;
+						clickFlag = false;
+					}
+					// Check if any button was pressed and execute its action
 					if (moveBT.pressed) {
 						if (!text.visible) {
 							text.visible = true;
 							text.text = "Click to move";
 							// clear the others state
+							atkBT.clear();
 						}
-						else if (FlxG.mouse.justPressed()) {
+						else if (didClick()) {
 							target.setMove(FlxG.mouse.x, FlxG.mouse.y);
 							text.visible = false;
 							sleep();
+						}
+					}
+					else if (atkBT.pressed) {
+						if (!text.visible) {
+							text.visible = true;
+							text.text = "Select a target to attack";
+							// clear the others state
+							moveBT.clear();
 						}
 					}
 					else {
@@ -97,6 +129,7 @@ package plugins {
 		
 		override public function draw():void {
 			moveBT.draw();
+			atkBT.draw();
 			if (text.visible)
 				text.draw();
 		}
@@ -113,13 +146,18 @@ package plugins {
 			
 			e.getMidpoint(center);
 			
+			// Set moveBt's position when tweening
 			moveBtTgt.x = center.x - 48;
 			moveBtTgt.y = center.y;
+			// Set atkBt's position when tweening
+			atkBtTgt.x = center.x + 48;
+			atkBtTgt.y = center.y;
 			
 			time = 0;
 			FlxG.paused = true;
 			FlxG.fade(0x33000000, 0.5);
 			text.visible = false;
+			clickFlag = false;
 		}
 		
 		public function sleep():void {
@@ -132,6 +170,7 @@ package plugins {
 			text.visible = false;
 			// Clear every button
 			moveBT.clear();
+			atkBT.clear();
 			
 			// Remove camera fx
 			FlxG.camera.stopFX();
@@ -141,6 +180,9 @@ package plugins {
 		
 		public function isDifferentTarget(e:Entity):Boolean {
 			return e != target;
+		}
+		public function querySelect():Boolean {
+			return atkBT.pressed;
 		}
 		
 		/**
@@ -158,6 +200,16 @@ package plugins {
 			// Update the scaling
 			obj.scale.x = t;
 			obj.scale.y = t;
+		}
+		
+		private function didClick():Boolean {
+			if (FlxG.mouse.justPressed())
+				clickFlag = true;
+			else if (clickFlag && !FlxG.mouse.pressed()) {
+				clickFlag = false;
+				return true;
+			}
+			return false;
 		}
 	}
 }
