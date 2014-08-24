@@ -96,5 +96,16 @@ package plugins {
 			while (fifo.length)
 				fifo.pop();
 		}
+		
+		public function get width():Number {
+			return wnd.width;
+		}
+		
+		public function get height():Number {
+			return wnd.height;
+		}
+		public function get y():Number {
+			return wnd.y;
+		}
 	}
 }
