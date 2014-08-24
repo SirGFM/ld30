@@ -48,9 +48,6 @@ package states {
 			
 			FlxG.worldBounds.make(0, 0, bg.width, FlxG.height);
 			
-			var pf:PathFind = new PathFind(bg.getData(true), bg.widthInTiles, bg.heightInTiles, 16, 16, 64, 128);
-			global.pathfind = pf;
-			
 			ent = new NWSlime();
 			ent.reset(240, 400-16);
 			ent.acceleration.y = Entity.grav;
@@ -61,6 +58,18 @@ package states {
 			add(ent);
 			
 			FlxG.watch(FlxG.camera.scroll, "x");
+			
+			global.whiteboard = new FlxSprite(0, 0);
+			global.whiteboard.makeGraphic(bg.width, FlxG.height, 0);
+			add(global.whiteboard);
+			global.whiteboard.ignoreDrawDebug = true;
+			global.whiteboard.immovable = true;
+			global.whiteboard.moves = false;
+			global.whiteboard.allowCollisions = 0;
+			
+			var pf:PathFind = new PathFind(bg.getData(true), bg.widthInTiles, bg.heightInTiles, 16, 16, 64, 128);
+			global.pathfind = pf;
+			
 			/*
 			ent = new LWChar();
 			ent.reset(32, 64);

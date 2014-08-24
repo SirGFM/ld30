@@ -54,14 +54,14 @@ package utils.pathfind {
 					//path.addNode(l.node, this, l.type == PathFind.JUMP);
 					return true;
 				}
-				i++;
 			}
 			return false;
 		}
 		
 		public function mouseInside():Boolean {
-			var X:Number = FlxG.mouse.x;
-			var Y:Number = FlxG.mouse.y;
+			return (pointInsideClick(FlxG.mouse.x, FlxG.mouse.y));
+		}
+		public function pointInsideClick(X:Number, Y:Number):Boolean {
 			return (X >= this.x)
 				&& (X <= this.x + this.width)
 				&& (Y >= this.clickY)

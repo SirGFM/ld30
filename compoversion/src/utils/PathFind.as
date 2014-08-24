@@ -73,6 +73,7 @@ package utils {
 						if (FlxU.abs(tmp.y - n.y) <= maxJump) {
 							n.links.push(new Link(tmp, PathFind.JUMP));
 							tmp.links.push(new Link(n, PathFind.FALL));
+							Global.self.whiteboard.drawLine(n.x + n.width / 2, n.y + n.height / 2, tmp.x + tmp.width / 2, tmp.y + tmp.height / 2, 0xff000000, 5);
 						}
 					}
 					else if (FlxU.abs(n.y - tmp.y) <= maxJump &&
@@ -80,6 +81,7 @@ package utils {
 						|| FlxU.abs(n.x - tmp.x - tmp.width) <= longestJump)) {
 						n.links.push(new Link(tmp, PathFind.JUMP));
 						tmp.links.push(new Link(n, PathFind.JUMP));
+						Global.self.whiteboard.drawLine(n.x + n.width / 2, n.y + n.height / 2, tmp.x + tmp.width / 2, tmp.y + tmp.height / 2, 0xff000000, 5);
 					}
 				}
 			}
@@ -146,15 +148,18 @@ package utils {
 		}
 		
 		public function pathToMouse(X:Number, Y:Number):EntityPath {
+			return pathToPosition(X, Y, FlxG.mouse.x, FlxG.mouse.y);
+		}
+		
+		public function pathToPosition(srcX:Number, srcY:Number, dstX:Number, dstY:Number):EntityPath {
 			var visited:Array;
 			var path:Array;
-			//var path:EntityPath;
 			var src:Node;
 			var dst:Node;
 			var i:int = 1;
 			// Search for the node were the mouse is at
 			while (i < nodes.length) {
-				if (nodes[i].mouseInside()) {
+				if (nodes[i].pointInsideClick(dstX, dstY)) {
 					dst = nodes[i];
 					break
 				}
@@ -166,7 +171,7 @@ package utils {
 			i = 1;
 			// Now, search for the node were the player is at
 			while (i < nodes.length) {
-				if (nodes[i].pointInside(X, Y)) {
+				if (nodes[i].pointInsideClick(srcX, srcY)) {
 					src = nodes[i];
 					break
 				}
@@ -179,13 +184,11 @@ package utils {
 			visited = new Array();
 			visited.push(src);
 			path = new Array();
-			//path = new EntityPath();
 			
 			if (src.pathTo(dst, visited, path)) {
-				//path.finishPath(FlxG.mouse.x, FlxG.mouse.y, X, Y);
 				path.push(src);
 				path.reverse();
-				var ep:EntityPath = new EntityPath(X, Y, FlxG.mouse.x, FlxG.mouse.y, path, src == nodes[0]);
+				var ep:EntityPath = new EntityPath(srcX, srcY, dstX, dstY, path, src == nodes[0]);
 				return ep;
 			}
 			
