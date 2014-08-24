@@ -27,6 +27,10 @@ package objs {
 			_type = LW;
 		}
 		
+		override public function update():void {
+			super.update();
+		}
+		
 		override public function doAIAction():void {
 			var e:Entity = global.playstate.getClosestEnemy(this, 64*64);
 			if (!e) {

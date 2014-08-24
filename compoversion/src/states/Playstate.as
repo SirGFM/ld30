@@ -13,6 +13,7 @@ package states {
 	import org.flixel.FlxState;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
+	import utils.Global;
 	import utils.PathFind;
 	import utils.textmenu.Option;
 	import utils.textmenu.TextMenu;
@@ -32,6 +33,7 @@ package states {
 		private var defeated:FlxSprite;
 		private var victory:FlxSprite;
 		private var menu:TextMenu;
+		private var fade:FlxSprite;
 		
 		public var debugGrp:FlxGroup;
 		
@@ -88,6 +90,12 @@ package states {
 			victory.alpha = 0;
 			victory.exists = false;
 			
+			fade = new FlxSprite();
+			fade.makeGraphic(FlxG.camera.width, FlxG.camera.height, 0xff000000);
+			fade.scrollFactor.make();
+			fade.alpha = 0;
+			fade.exists = false;
+			
 			menu = new TextMenu(256, onMenu);
 			menu.addOption(new Option("Retry", 16));
 			menu.addOption(new Option("Main menu", 16));
@@ -109,6 +117,7 @@ package states {
 			
 			defeated.destroy();
 			victory.destroy();
+			fade.destroy();
 			menu.destroy();
 			defeated = null;
 			menu = null;
@@ -169,6 +178,8 @@ package states {
 				FlxG.paused = true;
 				if (victory.exists == false) {
 					victory.exists = true;
+					fade.exists = true;
+					fade.alpha = 0;
 					victory.velocity.y = 64;
 					victory.alpha = 0;
 					victory.y = 0;
@@ -176,6 +187,7 @@ package states {
 				else if (victory.alpha < 1) {
 					victory.postUpdate();
 					victory.alpha += FlxG.elapsed / 2;
+					fade.alpha += FlxG.elapsed / 4;
 					if (victory.alpha >= 1) {
 						victory.alpha = 1;
 						// TODO WHAT DO?????????????
@@ -185,6 +197,8 @@ package states {
 			else if (plCount <= 0) {
 				FlxG.paused = true;
 				if (defeated.exists == false) {
+					fade.exists = true;
+					fade.alpha = 0;
 					defeated.exists = true;
 					defeated.velocity.y = 64;
 					defeated.alpha = 0;
@@ -193,6 +207,7 @@ package states {
 				else if (defeated.alpha < 1) {
 					defeated.postUpdate();
 					defeated.alpha += FlxG.elapsed / 2;
+					fade.alpha += FlxG.elapsed / 4;
 					if (defeated.alpha >= 1) {
 						defeated.alpha = 1;
 						menu.exists = true;
@@ -211,6 +226,8 @@ package states {
 		
 		override public function draw():void {
 			super.draw();
+			if (fade.exists)
+				fade.draw();
 			if (defeated.exists)
 				defeated.draw();
 			if (victory.exists)
@@ -308,7 +325,10 @@ package states {
 		
 		public function start():void {
 			var e:Entity;
-			justStarted = 0;
+			if (global.release)
+				justStarted = 0;
+			else
+				justStarted = 5;
 			time = 1;
 			switch(global.level) {
 				case 0:
@@ -342,7 +362,7 @@ package states {
 					callAll("kill");
 					bg.revive();
 					start();
-					FlxG.flash(0xffffffff, 0.5, function():void { defeated.exists = false; menu.exists = false; FlxG.paused = false; } );
+					FlxG.flash(0xffffffff, 0.5, function():void { defeated.exists = false; menu.exists = false; FlxG.paused = false; fade.exists = false; } );
 				}
 			}
 			else if (tm.currentOpt == "Main menu") {

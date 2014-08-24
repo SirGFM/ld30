@@ -19,6 +19,10 @@ package utils {
 		private var driver:SiONDriver;
 		private var song1:SiONData;
 		
+		public function playTypeWriter():void {
+			
+		}
+		
 		public function get playing():Boolean {
 			if (driver)
 				return driver.isPlaying;

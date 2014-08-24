@@ -26,5 +26,7 @@ package utils {
 		public var qwerty:Boolean = true;
 		public var debug:Boolean = true;
 		
+		public  var release:Boolean = false;
+		
 	}
 }

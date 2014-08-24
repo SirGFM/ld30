@@ -4,6 +4,7 @@ package {
 	import flash.events.Event;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGame;
+	import utils.Global;
 	import utils.PluginsManager;
 	import states.Menustate;
 	import states.Playstate;
@@ -28,13 +29,14 @@ package {
 			//super(640, 480, Playstate, 1, 60, 30, true);
 			
 			logo = null;
-			return;
+			if (!Global.self.release)
+				return;
 			
 			logo = new LogoGFM(true);
 			logo.scaleX = 2;
 			logo.scaleY = 2;
-			logo.x = (500 - logo.width) / 2;
-			logo.y = (500 - logo.height) / 2;
+			logo.x = (640 - logo.width) / 2;
+			logo.y = (480 - logo.height) / 2;
 			addChild(logo);
 		}
 		
