@@ -107,6 +107,7 @@ package states {
 			// Enable for awesomeness
 			//add (debugGrp);
 		}
+		
 		override public function destroy():void {
 			super.destroy();
 			global.playstate = null;
@@ -124,7 +125,6 @@ package states {
 		}
 		
 		override public function update():void {
-			
 			// Automatic movement on start
 			if (justStarted < 5) {
 				FlxG.paused = true;
