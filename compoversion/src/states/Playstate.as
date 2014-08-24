@@ -252,6 +252,11 @@ package states {
 				e = o1 as Entity;
 				p = o2 as Projectile;
 			}
+			else if (o1.ID == Entity.PROJ && (o2 is FlxTilemap) && FlxObject.separate(o1, o2))
+				o1.kill();
+			else if (o2.ID == Entity.PROJ && (o1 is FlxTilemap) && FlxObject.separate(o1, o2))
+				o2.kill();
+			
 			// Check if it's that type of collision and if can attack
 			if (p && e && p.canAttack(e)) {
 				e.hurt(p.dmg);
@@ -324,6 +329,7 @@ package states {
 		}
 		
 		public function start():void {
+			var i:int;
 			var e:Entity;
 			if (global.release)
 				justStarted = 0;
@@ -351,8 +357,21 @@ package states {
 					e = recycle(NWSlime) as Entity;
 					e.reset(77*16, 25*16);
 					e = recycle(NWSlime) as Entity;
-					e.reset(80*16, 25*16);
+					e.reset(80 * 16, 25 * 16);
+					i = 0;
+					while (i < 12) {
+						if (global.type == Entity.DW)
+							e = recycle(DWChar) as Entity;
+						else
+							e = recycle(LWChar) as Entity;
+						e.reset(16 + FlxG.random() * 100 % 64, 240 - 40);
+						i++;
+					}
 				break;
+				default: {
+					// Last level reached, play ending
+					FlxG.fade(0xff000000, 0.5, function():void { FlxG.switchState(new Menustate()); } );
+				}
 			}
 		}
 		

@@ -270,9 +270,11 @@ package objs.base {
 		override public function postUpdate():void {
 			if (!FlxG.paused) {
 				super.postUpdate();
-				if (x < 0)
+				if (ID == PROJ)
+					{}
+				else if (x < 0)
 					x = 0;
-				if (x + width >= FlxG.worldBounds.width)
+				else if (x + width >= FlxG.worldBounds.width)
 					x = FlxG.worldBounds.width - width;
 			}
 		}

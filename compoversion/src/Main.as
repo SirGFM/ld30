@@ -26,8 +26,8 @@ package {
 		private var logo:LogoGFM;
 		
 		public function Main():void {
-			//super(640, 480, Menustate, 1, 60, 30, true);
-			super(640, 480, CGstate, 1, 60, 30, true);
+			super(640, 480, Menustate, 1, 60, 30, true);
+			//super(640, 480, CGstate, 1, 60, 30, true);
 			//super(640, 480, Playstate, 1, 60, 30, true);
 			
 			logo = null;

@@ -33,7 +33,7 @@ package plugins {
 			
 			curText = "";
 			
-			text = new FlxText(16, 16, 48 * 16, "");
+			text = new FlxText(16, 16, 38 * 16, "");
 			text.setFormat("", 16, 0xffffff, "left", 0x33333333);
 			text.scrollFactor.make();
 			
@@ -106,6 +106,9 @@ package plugins {
 		}
 		public function get y():Number {
 			return wnd.y;
+		}
+		public function isAwaken():Boolean {
+			return exists;
 		}
 	}
 }

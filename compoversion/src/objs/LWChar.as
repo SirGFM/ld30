@@ -31,6 +31,11 @@ package objs {
 			super.update();
 		}
 		
+		override public function reset(X:Number, Y:Number):void {
+			super.reset(X, Y);
+			acceleration.y = grav;
+		}
+		
 		override public function doAIAction():void {
 			var e:Entity = global.playstate.getClosestEnemy(this, 64*64);
 			if (!e) {

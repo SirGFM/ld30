@@ -19,7 +19,12 @@ package objs {
 			_type = DW;
 		}
 		
-		override public function doAIAction(time:Number = 5):void {
+		override public function reset(X:Number, Y:Number):void {
+			super.reset(X, Y);
+			acceleration.y = grav;
+		}
+		
+		override public function doAIAction():void {
 			var e:Entity = global.playstate.getClosestAlly(this, 48 * 48, ATTACK);
 			if (e) {
 				setAttack(e.getTarget());

@@ -14,6 +14,8 @@ package utils {
 		public var level:int = 0;
 		
 		public var whiteboard:FlxSprite;
+		public var deathCount:int = 0;
+		public var karma:int = 0;
 		
 		public var clickedEntity:Entity = null;
 		public var playstate:Playstate = null;
