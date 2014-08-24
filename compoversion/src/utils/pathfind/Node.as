@@ -1,7 +1,9 @@
 package utils.pathfind {
 	import org.flixel.FlxG;
 	import org.flixel.FlxObject;
+	import utils.EntityPath;
 	import utils.Global;
+	import utils.PathFind;
 	
 	/**
 	 * ...
@@ -43,11 +45,13 @@ package utils.pathfind {
 				// Check if we've found the node
 				if (l.node == n) {
 					path.push(l.node);
+					//path.addNode(l.node, this, l.type == PathFind.JUMP);
 					return true;
 				}
 				// Check if this node is in the path to the destination
 				if (l.node.pathTo(n, visited, path)) {
 					path.push(l.node);
+					//path.addNode(l.node, this, l.type == PathFind.JUMP);
 					return true;
 				}
 				i++;

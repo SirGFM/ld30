@@ -1,5 +1,6 @@
 package utils {
 	
+	import org.flixel.FlxG;
 	import org.flixel.FlxObject;
 	import org.flixel.FlxU;
 	import utils.pathfind.Link;
@@ -107,7 +108,7 @@ package utils {
 						above = n;
 						bellow = tmp;
 					}
-					else if (tmp < n) {
+					else if (tmp.y < n.y) {
 						above = tmp;
 						bellow = n;
 					}
@@ -144,9 +145,10 @@ package utils {
 			nodes = null;
 		}
 		
-		public function pathToMouse(X:Number, Y:Number):Array {
+		public function pathToMouse(X:Number, Y:Number):EntityPath {
 			var visited:Array;
 			var path:Array;
+			//var path:EntityPath;
 			var src:Node;
 			var dst:Node;
 			var i:int = 1;
@@ -177,10 +179,14 @@ package utils {
 			visited = new Array();
 			visited.push(src);
 			path = new Array();
+			//path = new EntityPath();
 			
 			if (src.pathTo(dst, visited, path)) {
+				//path.finishPath(FlxG.mouse.x, FlxG.mouse.y, X, Y);
 				path.push(src);
-				// OK, what do, now?
+				path.reverse();
+				var ep:EntityPath = new EntityPath(X, Y, FlxG.mouse.x, FlxG.mouse.y, path, src == nodes[0]);
+				return ep;
 			}
 			
 			return null;

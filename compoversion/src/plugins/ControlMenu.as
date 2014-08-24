@@ -8,6 +8,7 @@ package plugins {
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxText;
+	import utils.EntityPath;
 	
 	/**
 	 * ...
@@ -182,9 +183,13 @@ package plugins {
 							text.text = "Click to move";
 						}
 						else if (didClick()) {
-							var arr:Array = global.pathfind.pathToMouse(target.x, target.y);
-							if (arr == null) {
+							//var arr:Array = global.pathfind.pathToMouse(target.x, target.y);
+							var ep:EntityPath = global.pathfind.pathToMouse(target.x, target.y);
+							if (ep == null) {
 								target.setMove(FlxG.mouse.x, global.floor - target.height);
+							}
+							else {
+								target.setPath(ep);
 							}
 							text.visible = false;
 							sleep();

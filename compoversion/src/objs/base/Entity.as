@@ -5,6 +5,7 @@ package objs.base {
 	import org.flixel.FlxG;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxU;
+	import utils.EntityPath;
 	import utils.Global;
 	import utils.PluginsManager;
 	
@@ -107,6 +108,8 @@ package objs.base {
 		protected var isMeelee:Boolean;
 		protected var canClick:Boolean;
 		
+		private var entPath:EntityPath;
+		
 		public function Entity(X:Number=0, Y:Number=0, SimpleGraphic:Class=null, atkDelay:Number = 1) {
 			super(X, Y, SimpleGraphic);
 			speed = 100;
@@ -125,6 +128,7 @@ package objs.base {
 			_time = FlxG.random() * 10;
 			FlxG.log("time to AI: " + _time);
 			colorTime = 0;
+			entPath = null;
 		}
 		
 		override public function update():void {
@@ -169,16 +173,25 @@ package objs.base {
 						doAIAction();
 				} break;
 				case MOVE: {
-					// Check if reached position
-					if (facing == RIGHT)
-						velocity.x = speed;
-					else if (facing == LEFT)
-						velocity.x = -speed;
-					if (velocity.x > 0 && _movetoX <= x
-					 || velocity.x < 0 && _movetoX >= x) {
-						// Make it stop using drag (so it slide slightly)
-						action = NONE;
-						drag.x = grav*2;
+					if (entPath) {
+						if (entPath.update(this)) {
+							entPath = null
+							action = NONE;
+							drag.x = grav*2;
+						}
+					}
+					else {
+						// Check if reached position
+						if (facing == RIGHT)
+							velocity.x = speed;
+						else if (facing == LEFT)
+							velocity.x = -speed;
+						if (velocity.x > 0 && _movetoX <= x
+						 || velocity.x < 0 && _movetoX >= x) {
+							// Make it stop using drag (so it slide slightly)
+							action = NONE;
+							drag.x = grav*2;
+						}
 					}
 				} break;
 				case ATTACK: {
@@ -260,6 +273,9 @@ package objs.base {
 			}
 			// Clear drag (so it'll indeed move)
 			drag.x = 0;
+		}
+		public function setPath(ep:EntityPath):void {
+			entPath = ep;
 		}
 		
 		public function canAttack(e:Entity):Boolean {
