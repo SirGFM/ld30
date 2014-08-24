@@ -65,7 +65,7 @@ package plugins {
 			standBtTgt = new FlxPoint();
 			
 			text = new FlxText(0, 16, FlxG.width, "");
-			text.setFormat(null, 8, 0xffffff, "center", 0xaadddddd);
+			text.setFormat(null, 16, 0xffffff, "center", 0x33333333);
 			text.visible = false;
 			text.scrollFactor.make();
 		}

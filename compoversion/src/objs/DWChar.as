@@ -2,6 +2,7 @@ package objs {
 	import objs.base.Entity;
 	import org.flixel.FlxG;
 	import org.flixel.FlxU;
+	import utils.EntityPath;
 	
 	/**
 	 * ...
@@ -15,8 +16,21 @@ package objs {
 			super(X, Y);
 			
 			loadGraphic(dw_char_01GFX, true, true, 32, 32);
+			width = 16;
+			height = 30;
+			centerOffsets();
+			
+			addAnimation("stand", [0], 0, false);
+			addAnimation("walk", [0, 1], 4);
+			addAnimation("attack", [3, 2,2,2,2,2, 3,3], 8, true);
 			
 			_type = DW;
+			
+			health = 20;
+			dmg = 2;
+			
+			maxRNGtime = 12;
+			minRNGtime = 1;
 		}
 		
 		override public function reset(X:Number, Y:Number):void {
@@ -25,20 +39,14 @@ package objs {
 		}
 		
 		override public function doAIAction():void {
-			var e:Entity = global.playstate.getClosestAlly(this, 48 * 48, ATTACK);
-			if (e) {
-				setAttack(e.getTarget());
+			var a:Entity = global.playstate.getClosestAlly(this, 48, ATTACK);
+			if (a) {
+				var e:Entity = a.getTarget();
+				if (global.playstate.canShoot(this.myGetCenter(), e.myGetCenter()))
+					setAttack(e);
 			}
 			else {
-				e = global.playstate.getClosestEnemy(this, 32 * 32);
-				if (e)
-					setAttack(e);
-				else {
-					var tgt:Number = x + (FlxU.floor(FlxG.random() * 100 % 16 - 8) * 8);
-					if (tgt < 0)
-						tgt = 16;
-					setMove(tgt, y);
-				}
+				randomWalk();
 			}
 		}
 	}

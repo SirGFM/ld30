@@ -9,17 +9,24 @@ package objs.base {
 	 */
 	public class Projectile extends Entity {
 		
+		[Embed(source = "../../../assets/gfx/bullets.png")]			private var bulGFX:Class;
+		
 		public function Projectile(X:Number=0, Y:Number=0, SimpleGraphic:Class=null) {
 			super(X, Y, SimpleGraphic);
-			makeGraphic(8, 8, 0xffff0000);
+			loadGraphic(bulGFX, true, false, 8, 8);
 			ID = PROJ;
 			_dmg = 1;
 		}
 		
 		override public function update():void {
 			super.update();
-			// TODO decide where is OOB
+			
+			if (frame % 2 == 0)
+				frame++;
+			
 			if (x < 0 || x > FlxG.worldBounds.width)
+				kill();
+			if (touching & ANY)
 				kill();
 		}
 		
@@ -32,6 +39,10 @@ package objs.base {
 			drag.x = 0;
 			drag.y = 0;
 			_type = Type;
+			if (type == DW)
+				frame = 2;
+			else
+				frame = 0;
 		}
 	}
 }

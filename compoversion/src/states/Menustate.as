@@ -28,7 +28,7 @@ package states {
 			global.level = 0;
 			global.floor = 0;
 			global.type = type;
-			FlxG.fade(0xff000000, 0.5, function():void { FlxG.switchState(new Playstate()); } );
+			FlxG.fade(0xff000000, 0.5, function():void { FlxG.switchState(new Introstate()); } );
 		}
 		
 		private function test_cb(tm:TextMenu):void {

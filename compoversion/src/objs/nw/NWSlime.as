@@ -23,8 +23,12 @@ package objs.nw {
 			addAnimation("attack", [2, 2, 3, 3, 3, 4, 5, 4], 8, true);
 			isMeelee = true;
 			maxdist = 24;
+			
 			health = 10;
-			dmg = 0.5;
+			dmg = 1;
+			
+			maxRNGtime = 10;
+			minRNGtime = 4;
 		}
 		
 		override public function reset(X:Number, Y:Number):void {
@@ -33,20 +37,13 @@ package objs.nw {
 		}
 		
 		override public function doAIAction():void {
-			var X:Number = (FlxU.floor(FlxG.random() * 100 % 11)*10 + 10) * 16;
-			var Y:Number = (FlxG.random() * 100 % 14 + 13) * 16;
-			var ep:EntityPath = global.pathfind.pathToPosition(x, y, X, Y);
-			
-			if (ep)
-				setPath(ep);
-			else
-				setMove(X, Y);
+			randomWalk();
 		}
 		
 		override public function hurt(Damage:Number):void {
 			super.hurt(Damage);
 			if (alive && action != ATTACK) {
-				var e:Entity = global.playstate.getClosestEnemy(this, 80 * 80, ATTACK);
+				var e:Entity = global.playstate.getClosestEnemy(this, 80, ATTACK);
 				if (e)
 					setAttack(e);
 			}

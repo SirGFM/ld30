@@ -3,6 +3,7 @@ package objs.base {
 	import objs.Bullet;
 	import objs.MeeleeProj;
 	import org.flixel.FlxG;
+	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxU;
 	import utils.EntityPath;
@@ -110,6 +111,9 @@ package objs.base {
 		
 		private var entPath:EntityPath;
 		
+		protected var maxRNGtime:Number;
+		protected var minRNGtime:Number;
+		
 		public function Entity(X:Number=0, Y:Number=0, SimpleGraphic:Class=null, atkDelay:Number = 1) {
 			super(X, Y, SimpleGraphic);
 			speed = 100;
@@ -119,6 +123,9 @@ package objs.base {
 			isMeelee = false;
 			_atkDelay = atkDelay;
 			canClick = true;
+			
+			maxRNGtime = 10;
+			minRNGtime = 1;
 		}
 		
 		override public function reset(X:Number, Y:Number):void {
@@ -138,6 +145,18 @@ package objs.base {
 		}
 		
 		override public function update():void {
+			// If jumped to void
+			if (isNaN(x) || isNaN(y) || isNaN(velocity.x) || isNaN(velocity.y)) {
+				FlxG.log("Recovered from space (x,y,vx,vy): ("+x+","+y+","+velocity.x+","+velocity.y+")");
+				x = 16;
+				y = 240 - 32;
+				velocity.x = 0;
+				velocity.y = 0;
+				drag.x = 0;
+				drag.y = 0;
+				entPath = null;
+				action = NONE;
+			}
 			// Make entity flash when hit
 			if (colorTime > 0) {
 				var c:uint;
@@ -204,16 +223,17 @@ package objs.base {
 					if (!_target.alive)
 						action = NONE;
 					else {
-						var dist:Number = FlxU.abs(x - _target.x);
-						dist *= dist;
+						var dx:Number = FlxU.abs(x - _target.x);
+						var dy:Number = FlxU.abs(y - _target.y);
+						var dist:Number = dx * dx + dy * dy;
 						if (_maxdist >= dist) {
+							play("attack");
 							drag.x = grav*2;
 							if (_target.x > x)
 								facing = RIGHT;
 							else if (_target.x < x)
 								facing = LEFT;
 							_time -= FlxG.elapsed;
-							play("attack");
 							if (_time <= 0) {
 								var p:Projectile;
 								_time += _atkDelay;
@@ -221,12 +241,17 @@ package objs.base {
 									p = global.playstate.recycle(Bullet) as Projectile;
 								else {
 									p = global.playstate.recycle(MeeleeProj) as Projectile;
-									p.dmg = dmg;
 								}
+								p.dmg = dmg;
 								p.start(x + width / 2, y + height / 2, facing, _type);
 							}
 						}
 						else if (!entPath && velocity.x == 0) {
+							if (FlxG.random() < 0.4) {
+								action = NONE;
+								return;
+							}
+							play("walk");
 							entPath = global.pathfind.pathToPosition(x, y, _target.x, _target.y);
 							if (!entPath) {
 								if (_target.x > x) {
@@ -348,7 +373,7 @@ package objs.base {
 			_action = val;
 			if (val == NONE) {
 				play("stand");
-				_time += FlxG.random() * 3;
+				_time += (FlxG.random() *100 % maxRNGtime) + minRNGtime;
 			}
 			else if (val == STAND) {
 				play("stand");
@@ -409,6 +434,21 @@ package objs.base {
 					global.playstate.plCount--;
 			}
 			super.kill();
+		}
+		
+		protected function randomWalk():void{
+			var X:Number = (FlxU.floor(FlxG.random() * 100 % 11)*10 + 10) * 16;
+			var Y:Number = (FlxG.random() * 100 % 14 + 13) * 16;
+			var ep:EntityPath = global.pathfind.pathToPosition(x, y, X, Y);
+			
+			if (ep)
+				setPath(ep);
+			else
+				setMove(X, Y);
+		}
+		
+		public function myGetCenter():FlxPoint {
+			return getMidpoint(_point);
 		}
 	}
 }

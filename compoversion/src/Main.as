@@ -5,6 +5,7 @@ package {
 	import org.flixel.FlxG;
 	import org.flixel.FlxGame;
 	import states.CGstate;
+	import states.Introstate;
 	import utils.Global;
 	import utils.PluginsManager;
 	import states.Menustate;
@@ -26,6 +27,7 @@ package {
 		private var logo:LogoGFM;
 		
 		public function Main():void {
+			//super(640, 480, Introstate, 1, 60, 30, true);
 			super(640, 480, Menustate, 1, 60, 30, true);
 			//super(640, 480, CGstate, 1, 60, 30, true);
 			//super(640, 480, Playstate, 1, 60, 30, true);

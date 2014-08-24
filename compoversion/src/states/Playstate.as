@@ -9,6 +9,7 @@ package states {
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxObject;
+	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxTilemap;
@@ -58,11 +59,6 @@ package states {
 			global.floor = 400;
 			
 			FlxG.worldBounds.make(0, 0, bg.width, FlxG.height);
-			
-			ent = new LWChar();
-			ent.reset(16, 64);
-			ent.acceleration.y = Entity.grav;
-			add(ent);
 			
 			global.whiteboard = new FlxSprite(0, 0);
 			global.whiteboard.makeGraphic(bg.width, FlxG.height, 0);
@@ -190,7 +186,7 @@ package states {
 					fade.alpha += FlxG.elapsed / 4;
 					if (victory.alpha >= 1) {
 						victory.alpha = 1;
-						// TODO WHAT DO?????????????
+						FlxG.fade(0xff000000, 2, function():void { FlxG.switchState(new CGstate()); } );
 					}
 				}
 			}
@@ -217,6 +213,8 @@ package states {
 					menu.update();
 				}
 			}
+			else if (!plgMngr.controlMenu.exists && FlxG.keys.justPressed("ESCAPE") || FlxG.keys.justPressed("P"))
+				FlxG.paused = !FlxG.paused;
 			// update logic
 			super.update();
 			// collide (this may modify the position)
@@ -278,14 +276,18 @@ package states {
 			var curdist:Number = 10000000;
 			var curtgt:int = -1;
 			var i:int = -1;
-			// This looke horrible >_<
+			var dx:Number;
+			var dy:Number;
+			// This look horrible >_<
+			maxdist *= maxdist;
 			while (++i < length) {
 				var dist:Number;
 				var e:Entity = members[i] as Entity;
 				if (!e || !e.alive)
 					continue;
-				dist = FlxU.abs(self.x - e.x);
-				dist *= dist;
+				dx = FlxU.abs(self.x - e.x);
+				dy = FlxU.abs(self.y - e.y);
+				dist = dx*dx + dy*dy;
 				if (e.type != self.type && e.ID != Entity.PROJ && dist < maxdist && dist < curdist) {
 					if (action != 0 && e.action != action)
 						continue;
@@ -309,14 +311,18 @@ package states {
 			var curdist:Number = 10000000;
 			var curtgt:int = -1;
 			var i:int = -1;
+			var dx:Number;
+			var dy:Number;
 			// This looke horrible >_<
+			maxdist *= maxdist;
 			while (++i < length) {
 				var dist:Number;
 				var e:Entity = members[i] as Entity;
 				if (!e)
 					continue;
-				dist = FlxU.abs(self.x - e.x);
-				dist *= dist;
+				dx = FlxU.abs(self.x - e.x);
+				dy = FlxU.abs(self.y - e.y);
+				dist = dx*dx + dy*dy;
 				if (e.type == self.type && e.ID != Entity.PROJ && dist < maxdist && dist < curdist) {
 					if (action != 0 && e.action != action)
 						continue;
@@ -331,6 +337,7 @@ package states {
 		public function start():void {
 			var i:int;
 			var e:Entity;
+			var numPl:int = 0;
 			if (global.release)
 				justStarted = 0;
 			else
@@ -358,20 +365,21 @@ package states {
 					e.reset(77*16, 25*16);
 					e = recycle(NWSlime) as Entity;
 					e.reset(80 * 16, 25 * 16);
-					i = 0;
-					while (i < 12) {
-						if (global.type == Entity.DW)
-							e = recycle(DWChar) as Entity;
-						else
-							e = recycle(LWChar) as Entity;
-						e.reset(16 + FlxG.random() * 100 % 64, 240 - 40);
-						i++;
-					}
+					numPl = 12;
 				break;
 				default: {
 					// Last level reached, play ending
-					FlxG.fade(0xff000000, 0.5, function():void { FlxG.switchState(new Menustate()); } );
+					FlxG.fade(0xff000000, 0.5, function():void { FlxG.switchState(new Endstate()); } );
 				}
+			}
+			i = 0;
+			while (i < numPl) {
+				if (global.type == Entity.DW)
+					e = recycle(DWChar) as Entity;
+				else
+					e = recycle(LWChar) as Entity;
+				e.reset(16 + FlxG.random() * 100 % 64, global.floor - 40);
+				i++;
 			}
 		}
 		
@@ -389,6 +397,10 @@ package states {
 					FlxG.fade(0xff000000, 0.5, function():void { FlxG.switchState(new Menustate()); FlxG.paused = false; } );
 				}
 			}
+		}
+		
+		public function canShoot(obj:FlxPoint, other:FlxPoint):Boolean {
+			return bg.ray(obj, other, null, 1);
 		}
 	}
 }

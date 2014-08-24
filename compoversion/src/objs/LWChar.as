@@ -3,6 +3,7 @@ package objs {
 	import objs.base.Entity;
 	import org.flixel.FlxG;
 	import org.flixel.FlxU;
+	import utils.EntityPath;
 	
 	/**
 	 * ...
@@ -25,6 +26,12 @@ package objs {
 			addAnimation("attack", [2, 0, 0, 0, 0, 0, 2, 3], 8, true);
 			
 			_type = LW;
+			
+			health = 12;
+			dmg = 4;
+			
+			maxRNGtime = 9;
+			minRNGtime = 3;
 		}
 		
 		override public function update():void {
@@ -37,15 +44,17 @@ package objs {
 		}
 		
 		override public function doAIAction():void {
-			var e:Entity = global.playstate.getClosestEnemy(this, 64*64);
+			var e:Entity = global.playstate.getClosestEnemy(this, 32);
 			if (!e) {
-				var tgt:Number = x + (FlxU.floor(FlxG.random() * 100 % 16 - 8) * 8);
-				if (tgt < 0)
-					tgt = 16;
-				setMove(tgt, y);
+				randomWalk();
 			}
 			else {
-				setAttack(e);
+				if(global.playstate.canShoot(myGetCenter(), e.myGetCenter()))
+					setAttack(e);
+				else {
+					var ep:EntityPath = global.pathfind.pathToPosition(x, y, e.x, e.y);
+					setPath(ep);
+				}
 			}
 		}
 	}
