@@ -2,6 +2,8 @@ package objs.nw {
 	import objs.base.Entity;
 	import objs.base.NW;
 	import org.flixel.FlxG;
+	import org.flixel.FlxU;
+	import utils.EntityPath;
 	
 	/**
 	 * Dumb as **** enemy.
@@ -25,15 +27,20 @@ package objs.nw {
 			dmg = 0.5;
 		}
 		
+		override public function reset(X:Number, Y:Number):void {
+			super.reset(X, Y);
+			acceleration.y = grav;
+		}
+		
 		override public function doAIAction():void {
-			var X:Number = x + FlxG.random() * 100;
+			var X:Number = (FlxU.floor(FlxG.random() * 100 % 11)*10 + 10) * 16;
+			var Y:Number = (FlxG.random() * 100 % 14 + 13) * 16;
+			var ep:EntityPath = global.pathfind.pathToPosition(x, y, X, Y);
 			
-			if (X < 0)
-				X = 16;
-			else if (X > FlxG.width)
-				X = FlxG.width - 16;
-			
-			setMove(X, y);
+			if (ep)
+				setPath(ep);
+			else
+				setMove(X, Y);
 		}
 		
 		override public function hurt(Damage:Number):void {

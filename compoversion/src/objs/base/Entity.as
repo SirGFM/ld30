@@ -125,9 +125,16 @@ package objs.base {
 			super.reset(X, Y);
 			_action = NONE;
 			clickFlag = false;
-			_time = FlxG.random() * 10;
+			_time = FlxG.random() * 5;
 			colorTime = 0;
 			entPath = null;
+			
+			if (ID != PROJ) {
+				if (type == NW)
+					global.playstate.enCount++;
+				else if (type == global.type)
+					global.playstate.plCount++;
+			}
 		}
 		
 		override public function update():void {

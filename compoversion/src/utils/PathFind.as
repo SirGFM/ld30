@@ -130,7 +130,7 @@ package utils {
 					n = nodes[i];
 					var obj:FlxObject = new FlxObject(n.x, n.clickY, n.width, n.clickHeight);
 					obj.allowCollisions = FlxObject.NONE;
-					Global.self.playstate.add(obj);
+					Global.self.playstate.debugGrp.add(obj);
 				}
 			}
 		}

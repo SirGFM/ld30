@@ -112,7 +112,7 @@ package plugins {
 				} break;
 				default: {
 					if (!target) {
-						FlxG.log("@ControlMenu.as:~82 - ERROR: target = null");
+						FlxG.log("@ControlMenu.as:~115 - ERROR: target = null");
 						exists = false;
 						FlxG.paused = false;
 					}

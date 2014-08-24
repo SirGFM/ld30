@@ -34,10 +34,8 @@ package objs {
 				if (tgt < 0)
 					tgt = 16;
 				setMove(tgt, y);
-				FlxG.log("x: "+x+" move to: " + _movetoX);
 			}
 			else {
-				FlxG.log("attacK!");
 				setAttack(e);
 			}
 		}

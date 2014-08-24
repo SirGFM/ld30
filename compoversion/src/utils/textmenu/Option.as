@@ -16,10 +16,10 @@ package utils.textmenu {
 		
 		public function Option(Text:String, Size:int = 8, Color:uint = 0xffffffff, Shadow:uint = 0x33333333) {
 			super(0, 0, FlxG.width, Text);
-			setFormat(null, Size, 0xffedde8d, "center", 0x887b6049);
+			setFormat(null, Size, Color, "center", Shadow);
 			
-			_myColor = 0xffedde8d;
-			_myUnColor = 0xffb48e6d;
+			_myColor = Color;
+			_myUnColor = 0xff888888;
 			/*
 			setFormat(null, Size, Color, "center", Shadow);
 			_myColor = Color;

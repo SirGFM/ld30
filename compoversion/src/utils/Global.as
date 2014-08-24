@@ -11,6 +11,8 @@ package utils {
 		
 		static public const self:Global = new Global();
 		
+		public var level:int = 0;
+		
 		public var whiteboard:FlxSprite;
 		
 		public var clickedEntity:Entity = null;

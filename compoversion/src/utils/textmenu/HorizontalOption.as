@@ -27,7 +27,7 @@ package utils.textmenu {
 			var t:FlxText;
 			while (i < Options.length) {
 				t = new FlxText(0, height + 2, (Options[i] as String).length * 9, (Options[i++] as String));
-				t.shadow = 0x887b6049;
+				t.shadow = Shadow;
 				w += t.width + 12;
 				_opts.push(t);
 			}
@@ -47,7 +47,7 @@ package utils.textmenu {
 			}
 			
 			//_myMidColor = (_myColor && 0xff000000) | (_myColor & 0x00cccccc);
-			_myMidColor = 0xffc6b17d;
+			_myMidColor = 0xffcccccc;
 			
 			_cur = Current;
 			_opts[_cur].color = _myMidColor;
