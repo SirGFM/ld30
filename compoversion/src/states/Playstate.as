@@ -19,7 +19,7 @@ package states {
 	 */
 	public class Playstate extends FlxState {
 		
-		[Embed(source = "../../assets/gfx/tmp_tm.png")]		private var tmGFX:Class;
+		[Embed(source = "../../assets/gfx/tileset.png")]		private var tmGFX:Class;
 		[Embed(source = "../../assets/maps/bg-map.txt", mimeType = "application/octet-stream")]	private var tmData:Class;
 		
 		private var bg:FlxTilemap;
@@ -40,7 +40,7 @@ package states {
 			
 			var str:String = new tmData;
 			bg = new FlxTilemap();
-			bg.loadMap(str, tmGFX, 16, 16, FlxTilemap.OFF, 0, 0, 1);
+			bg.loadMap(str, tmGFX, 16, 16, FlxTilemap.OFF, 0, 0, 16);
 			bg.immovable = true;
 			bg.ignoreDrawDebug = true;
 			add(bg);
@@ -52,12 +52,15 @@ package states {
 			ent.reset(240, 400-16);
 			ent.acceleration.y = Entity.grav;
 			add(ent);
+			
 			ent = new LWChar();
 			ent.reset(16, 64);
 			ent.acceleration.y = Entity.grav;
 			add(ent);
-			
-			FlxG.watch(FlxG.camera.scroll, "x");
+			FlxG.watch(ent, "x");
+			FlxG.watch(ent, "y");
+			FlxG.watch(ent.velocity, "x", "vx");
+			FlxG.watch(ent.velocity, "y", "vy");
 			
 			global.whiteboard = new FlxSprite(0, 0);
 			global.whiteboard.makeGraphic(bg.width, FlxG.height, 0);
@@ -85,7 +88,6 @@ package states {
 			ent.acceleration.y = Entity.grav;
 			add(ent);
 			*/
-			
 		}
 		override public function destroy():void {
 			super.destroy();

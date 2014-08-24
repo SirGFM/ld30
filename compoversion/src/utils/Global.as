@@ -22,6 +22,7 @@ package utils {
 		 */
 		public var type:uint = 0;
 		public var qwerty:Boolean = true;
+		public var debug:Boolean = true;
 		
 	}
 }

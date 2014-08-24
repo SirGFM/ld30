@@ -2,6 +2,7 @@ package utils {
 	import objs.base.Entity;
 	import org.flixel.FlxG;
 	import org.flixel.FlxObject;
+	import org.flixel.FlxU;
 	import utils.pathfind.Node;
 	
 	/**
@@ -27,13 +28,13 @@ package utils {
 				walkToPoint(iniX, (arr[1] as Node).x - 48,  (arr[0] as Node).y);
 			else
 				walkToBorder(iniX, (arr[0] as Node).y, arr[0], arr[1]);
-			jumpTo(arr[1]);
+			jumpTo(arr[0], arr[1]);
 			
 			i = 1;
 			while (i < arr.length-1) {
 				var src:Target = moves[moves.length - 1];
 				walkToBorder(src.X, src.Y, arr[i], arr[i+1]);
-				jumpTo(arr[i+1]);
+				jumpTo(arr[i], arr[i+1]);
 				i++;
 			}
 			walkToPoint((moves[moves.length - 1] as Target).X, finalX, finalY);
@@ -89,19 +90,37 @@ package utils {
 			moves.push(t);
 		}
 		
-		public function jumpTo(dst:Node):void {
+		public function jumpTo(srcN:Node, dst:Node):void {
 			var src:Target = moves[moves.length - 1];
 			var t:Target = new Target();
+			var dx:Number = FlxU.abs(src.X - dst.x);
 			
 			// Check whether we are going left or right, set velocity and destination
-			if (src.X > dst.x) {
+			if (dst.y == 416) {
+				t.dir = src.dir;
+				if (t.dir == FlxObject.LEFT) {
+					t.vx = -100;
+					t.X = src.X - 48;
+				}
+				else if (t.dir == FlxObject.RIGHT) {
+					t.vx = 100;
+					t.X = src.X + srcN.width + 48;
+				}
+			}
+			else if (src.X > dst.x) {
 				t.dir = FlxObject.LEFT;
-				t.vx = -100;
+				if (dx < 64)
+					t.vx = -100;
+				else
+					t.vx = -200;
 				t.X = dst.x + dst.width - 32;
 			}
 			else if (src.X < dst.x) {
 				t.dir = FlxObject.RIGHT;
-				t.vx = 100;
+				if (dx < 64)
+					t.vx = 100;
+				else
+					t.vx = 200;
 				t.X = dst.x;
 			}
 			// Calculate movement time
@@ -109,7 +128,14 @@ package utils {
 			// Set vertical destionation
 			t.Y = dst.y;
 			// Calculate jump velocity
-			t.vy = (t.Y - 16 - src.Y - Entity.grav * t.time * t.time * 0.5) / t.time;
+			if (dst.y == 416) {
+				t.vy = 0;
+			}
+			else if (src.Y != dst.y) {
+				t.vy = (t.Y - 16 - src.Y - Entity.grav * t.time * t.time * 0.5) / t.time;
+			}
+			else
+				t.vy = 0;
 			// Push this movement to the path
 			moves.push(t);
 		}
@@ -119,7 +145,23 @@ package utils {
 			
 			t = new Target();
 			// Set direction, horizontal velocity and destination
-			if (dst.x < src.x) {
+			if (src.y == 416) {
+				var borderX:Number;
+				if (moves.length == 0)
+					borderX = src.x;
+				else
+					borderX = (moves[moves.length - 1] as Target).X;
+				if (dst.x < borderX) {
+					t.dir = FlxObject.LEFT;
+					t.vx = -100;
+				}
+				else {
+					t.dir = FlxObject.RIGHT;
+					t.vx = 100;
+				}
+				t.X = dst.x - 48;
+			}
+			else if (dst.x < src.x) {
 				t.dir = FlxObject.LEFT;
 				t.vx = -100;
 				t.X = src.x;

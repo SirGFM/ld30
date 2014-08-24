@@ -126,7 +126,6 @@ package objs.base {
 			_action = NONE;
 			clickFlag = false;
 			_time = FlxG.random() * 10;
-			FlxG.log("time to AI: " + _time);
 			colorTime = 0;
 			entPath = null;
 		}
@@ -220,13 +219,24 @@ package objs.base {
 								p.start(x + width / 2, y + height / 2, facing, _type);
 							}
 						}
-						else if (_target.x > x) {
-							velocity.x = speed;
-							drag.x = 0;
+						else if (!entPath && velocity.x == 0) {
+							entPath = global.pathfind.pathToPosition(x, y, _target.x, _target.y);
+							if (!entPath) {
+								if (_target.x > x) {
+									velocity.x = speed;
+									drag.x = 0;
+								}
+								else if (_target.x < x) {
+									velocity.x = -speed;
+									drag.x = 0;
+								}
+							}
 						}
-						else if (_target.x < x) {
-							velocity.x = -speed;
-							drag.x = 0;
+						else if (entPath) {
+							if (entPath.update(this)) {
+								entPath = null;
+								drag.x = grav*2;
+							}
 						}
 					}
 				} break;
@@ -251,8 +261,13 @@ package objs.base {
 		}
 		
 		override public function postUpdate():void {
-			if (!FlxG.paused)
+			if (!FlxG.paused) {
 				super.postUpdate();
+				if (x < 0)
+					x = 0;
+				if (x + width >= FlxG.worldBounds.width)
+					x = FlxG.worldBounds.width - width;
+			}
 		}
 		
 		public function setMove(X:Number, Y:Number):void {
@@ -275,6 +290,9 @@ package objs.base {
 			drag.x = 0;
 		}
 		public function setPath(ep:EntityPath):void {
+			// Set current action
+			action = MOVE;
+			// Assign current path
 			entPath = ep;
 		}
 		
@@ -289,6 +307,7 @@ package objs.base {
 			action = ATTACK;
 			// Set current target
 			_target = e;
+			entPath = null;
 			plgMngr.controlMenu.sleep();
 		}
 		
@@ -326,10 +345,10 @@ package objs.base {
 				play("stand");
 			}
 			else if (val == MOVE) {
-				play("move");
+				play("walk");
 			}
-			if (val == ATTACK) {
-				play("move");
+			else if (val == ATTACK) {
+				play("walk");
 				_time = _atkDelay;
 			}
 		}

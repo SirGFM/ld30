@@ -73,7 +73,8 @@ package utils {
 						if (FlxU.abs(tmp.y - n.y) <= maxJump) {
 							n.links.push(new Link(tmp, PathFind.JUMP));
 							tmp.links.push(new Link(n, PathFind.FALL));
-							Global.self.whiteboard.drawLine(n.x + n.width / 2, n.y + n.height / 2, tmp.x + tmp.width / 2, tmp.y + tmp.height / 2, 0xff000000, 5);
+							if (Global.self.debug)
+								Global.self.whiteboard.drawLine(n.x + n.width / 2, n.y + n.height / 2, tmp.x + tmp.width / 2, tmp.y + tmp.height / 2, 0xff000000, 5);
 						}
 					}
 					else if (FlxU.abs(n.y - tmp.y) <= maxJump &&
@@ -81,12 +82,13 @@ package utils {
 						|| FlxU.abs(n.x - tmp.x - tmp.width) <= longestJump)) {
 						n.links.push(new Link(tmp, PathFind.JUMP));
 						tmp.links.push(new Link(n, PathFind.JUMP));
-						Global.self.whiteboard.drawLine(n.x + n.width / 2, n.y + n.height / 2, tmp.x + tmp.width / 2, tmp.y + tmp.height / 2, 0xff000000, 5);
+						if (Global.self.debug)
+							Global.self.whiteboard.drawLine(n.x + n.width / 2, n.y + n.height / 2, tmp.x + tmp.width / 2, tmp.y + tmp.height / 2, 0xff000000, 5);
 					}
 				}
 			}
 			// Finally calculate the clickable area
-			i = 0;
+			i = -1;
 			while (++i < nodes.length) {
 				// Here we get every node
 				n = nodes[i];
@@ -122,12 +124,14 @@ package utils {
 					}
 				}
 			}
-			i = 0;
-			while (++i < nodes.length) {
-				n = nodes[i];
-				var obj:FlxObject = new FlxObject(n.x, n.clickY, n.width, n.clickHeight);
-				obj.allowCollisions = FlxObject.NONE;
-				Global.self.playstate.add(obj);
+			if (Global.self.debug) {
+				i = -1;
+				while (++i < nodes.length) {
+					n = nodes[i];
+					var obj:FlxObject = new FlxObject(n.x, n.clickY, n.width, n.clickHeight);
+					obj.allowCollisions = FlxObject.NONE;
+					Global.self.playstate.add(obj);
+				}
 			}
 		}
 		
@@ -180,15 +184,12 @@ package utils {
 			// If we can't find the node, the player is at the floor
 			if (!src)
 				src = nodes[0];
-			// Keep track of every visited node, start with the src
-			visited = new Array();
-			visited.push(src);
 			path = new Array();
 			
-			if (src.pathTo(dst, visited, path)) {
+			if (src.pathTo(dst, path)) {
 				path.push(src);
 				path.reverse();
-				var ep:EntityPath = new EntityPath(srcX, srcY, dstX, dstY, path, src == nodes[0]);
+				var ep:EntityPath = new EntityPath(srcX, srcY, dstX, dstY, path, src == nodes[0] || src.y == 416);
 				return ep;
 			}
 			

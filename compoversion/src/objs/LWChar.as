@@ -16,6 +16,13 @@ package objs {
 			super(X, Y);
 			
 			loadGraphic(lw_char_01GFX, true, true, 32, 32);
+			width = 16;
+			height = 24;
+			centerOffsets();
+			
+			addAnimation("stand", [0], 0, false);
+			addAnimation("walk", [0, 1], 4);
+			addAnimation("attack", [2, 0, 0, 0, 0, 0, 2, 3], 8, true);
 			
 			_type = LW;
 		}

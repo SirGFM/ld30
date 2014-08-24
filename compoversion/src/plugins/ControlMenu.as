@@ -19,7 +19,6 @@ package plugins {
 		[Embed(source = "../../assets/gfx/moveBt.png")]			private var moveBtGFX:Class;
 		[Embed(source = "../../assets/gfx/atkBt.png")]			private var atkBtGFX:Class;
 		[Embed(source = "../../assets/gfx/cancelBt.png")]		private var cancelBtGFX:Class;
-		[Embed(source = "../../assets/gfx/jumpBt.png")]			private var jumpBtGFX:Class;
 		[Embed(source = "../../assets/gfx/standBt.png")]		private var standBtGFX:Class;
 		
 		private static const NONE:uint = 0x0000;
@@ -31,14 +30,12 @@ package plugins {
 		private var moveBT:MyButton;
 		private var atkBT:MyButton;
 		private var cancelBt:MyButton;
-		private var jumpBt:MyButton;
 		private var standBt:MyButton;
 		
 		private var center:FlxPoint;
 		private var moveBtTgt:FlxPoint;
 		private var atkBtTgt:FlxPoint;
 		private var cancelBtTgt:FlxPoint;
-		private var jumpBtTgt:FlxPoint;
 		private var standBtTgt:FlxPoint;
 		
 		private var time:Number;
@@ -58,8 +55,6 @@ package plugins {
 			atkBT.loadGraphic(atkBtGFX, true, false, 16, 16);
 			cancelBt = new MyButton();
 			cancelBt.loadGraphic(cancelBtGFX, true, false, 16, 16);
-			jumpBt = new MyButton();
-			jumpBt.loadGraphic(jumpBtGFX, true, false, 16, 16);
 			standBt = new MyButton();
 			standBt.loadGraphic(standBtGFX, true, false, 16, 16);
 			
@@ -67,7 +62,6 @@ package plugins {
 			moveBtTgt = new FlxPoint();
 			atkBtTgt = new FlxPoint();
 			cancelBtTgt = new FlxPoint();
-			jumpBtTgt = new FlxPoint();
 			standBtTgt = new FlxPoint();
 			
 			text = new FlxText(0, 16, FlxG.width, "");
@@ -101,7 +95,6 @@ package plugins {
 					tween(moveBT, center, moveBtTgt, time);
 					tween(atkBT, center, atkBtTgt, time);
 					tween(cancelBt, center, cancelBtTgt, time);
-					tween(jumpBt, center, jumpBtTgt, time);
 					tween(standBt, center, standBtTgt, time);
 				} break;
 				case END: {
@@ -115,7 +108,6 @@ package plugins {
 					tween(moveBT, center, moveBtTgt, time);
 					tween(atkBT, center, atkBtTgt, time);
 					tween(cancelBt, center, cancelBtTgt, time);
-					tween(jumpBt, center, jumpBtTgt, time);
 					tween(standBt, center, standBtTgt, time);
 				} break;
 				default: {
@@ -128,13 +120,11 @@ package plugins {
 					moveBT.update();
 					atkBT.update();
 					cancelBt.update();
-					jumpBt.update();
 					standBt.update();
 					// Clear any state
 					if (moveBT.justPressed()) {
 						atkBT.clear();
 						cancelBt.clear();
-						jumpBt.clear();
 						standBt.clear();
 						text.visible = false;
 						clickFlag = false;
@@ -142,7 +132,6 @@ package plugins {
 					else if (atkBT.justPressed()) {
 						moveBT.clear();
 						cancelBt.clear();
-						jumpBt.clear();
 						standBt.clear();
 						text.visible = false;
 						clickFlag = false;
@@ -150,27 +139,15 @@ package plugins {
 					else if (cancelBt.justPressed()) {
 						moveBT.clear();
 						atkBT.clear();
-						jumpBt.clear();
 						standBt.clear();
 						text.visible = false;
 						clickFlag = false;
-						sleep();
-					}
-					else if (jumpBt.justPressed()) {
-						moveBT.clear();
-						atkBT.clear();
-						cancelBt.clear();
-						standBt.clear();
-						text.visible = false;
-						clickFlag = false;
-						target.setJump();
 						sleep();
 					}
 					else if (standBt.justPressed()) {
 						moveBT.clear();
 						atkBT.clear();
 						cancelBt.clear();
-						jumpBt.clear();
 						text.visible = false;
 						clickFlag = false;
 						target.setStand();
@@ -183,7 +160,6 @@ package plugins {
 							text.text = "Click to move";
 						}
 						else if (didClick()) {
-							//var arr:Array = global.pathfind.pathToMouse(target.x, target.y);
 							var ep:EntityPath = global.pathfind.pathToMouse(target.x, target.y);
 							if (ep == null) {
 								target.setMove(FlxG.mouse.x, global.floor - target.height);
@@ -218,11 +194,6 @@ package plugins {
 							text.text = "Close this menu";
 							text.visible = true;
 						}
-						else if (jumpBt.isOver()) {
-							// LOOOOOOOOOOOOOOOOOOOL
-							text.text = "Jump to the direction currently faced";
-							text.visible = true;
-						}
 						else if (standBt.isOver()) {
 							text.text = "Halt all character movement (and AI )";
 							text.visible = true;
@@ -237,7 +208,6 @@ package plugins {
 				moveBT.draw();
 				atkBT.draw();
 				cancelBt.draw();
-				jumpBt.draw();
 				standBt.draw();
 			}
 			if (text.visible)
@@ -262,14 +232,11 @@ package plugins {
 			cancelBtTgt.x = center.x;
 			cancelBtTgt.y = center.y;
 			// Set moveBt's position when tweening
-			moveBtTgt.x = center.x + 16;
-			moveBtTgt.y = center.y;
+			moveBtTgt.x = center.x;
+			moveBtTgt.y = center.y + 16;
 			// Set atkBt's position when tweening
 			atkBtTgt.x = center.x;
 			atkBtTgt.y = center.y - 16;
-			// Set jumpBt's position when tweening
-			jumpBtTgt.x = center.x;
-			jumpBtTgt.y = center.y + 16;
 			// Set standBt's position when tweening
 			standBtTgt.x = center.x - 16;
 			standBtTgt.y = center.y;
@@ -293,7 +260,6 @@ package plugins {
 			// Clear every button
 			moveBT.clear();
 			atkBT.clear();
-			jumpBt.clear();
 			standBt.clear();
 			cancelBt.clear();
 			
