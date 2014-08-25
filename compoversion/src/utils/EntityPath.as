@@ -11,6 +11,8 @@ package utils {
 	 */
 	public class EntityPath {
 		
+		static private const sfx:SFX = SFX.self;
+		
 		private var moves:Array;
 		
 		private var pos:int;
@@ -59,6 +61,8 @@ package utils {
 				t = 0;
 				e.velocity.y = tgt.vy;
 				e.drag.x = 0;
+				if (tgt.vy != 0)
+					sfx.playjumpSFX();
 			}
 			e.velocity.x = tgt.vx;
 			e.facing = tgt.dir;

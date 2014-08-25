@@ -53,6 +53,8 @@ package states {
 			t2.y = bt2.y + 8;
 			add(t2);
 			
+			(add(new FlxText(0, 64, 640, "The Nether")) as FlxText).setFormat(null, 24, 0xffffff, "center", 0x33333333);
+			
 			sfx.playSong1();
 			plgMngr.textWindow.sleep();
 		}

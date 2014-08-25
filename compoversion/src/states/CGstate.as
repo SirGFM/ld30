@@ -263,8 +263,13 @@ package states {
 		}
 		
 		private function onMenu(tm:TextMenu):void {
-			if (!tm.selected)
+			if (time < 0.5)
 				return;
+			if (!tm.selected) {
+				sfx.playtextMenuSFX();
+				return;
+			}
+			sfx.playtexMenu_selectedSFX();
 			if (tm.currentOpt == goodOpt) {
 				global.karma++;
 			}

@@ -8,6 +8,7 @@ screen_*.png
 
 promo/*.png
 promo/*.gif
+*.wav
 
 # Other files and folders
 .settings/

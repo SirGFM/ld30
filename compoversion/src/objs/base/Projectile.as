@@ -31,6 +31,7 @@ package objs.base {
 		}
 		
 		public function start(X:Number, Y:Number, dir:uint, Type:uint):void {
+			_type = Type;
 			reset(X, Y);
 			if (dir == LEFT)
 				velocity.x = -speed;
@@ -38,7 +39,6 @@ package objs.base {
 				velocity.x = speed;
 			drag.x = 0;
 			drag.y = 0;
-			_type = Type;
 			if (type == DW)
 				frame = 2;
 			else

@@ -20,11 +20,12 @@ package objs {
 		}
 		
 		override public function start(X:Number, Y:Number, dir:uint, Type:uint):void {
+			_type = Type;
 			reset(X, Y);
 			velocity.x = 0;
-			_type = Type;
 			visible = false;
 			firstFrame = true;
+			sfx.playene_atkSFX();
 		}
 	}
 }

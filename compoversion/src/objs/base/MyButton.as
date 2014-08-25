@@ -36,6 +36,7 @@ package objs.base {
 					_pressed = false;
 					state = OVER;
 					setGFX();
+					sfx.playtexMenu_selectedSFX();
 				}
 			}
 			else if (over) {
@@ -53,6 +54,7 @@ package objs.base {
 				else if (state == PRESSED) {
 					if (!FlxG.mouse.pressed()) {
 						_pressed = true;
+						sfx.playtexMenu_selectedSFX();
 					}
 				}
 			}
