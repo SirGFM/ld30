@@ -8,7 +8,8 @@ package utils {
 	 */
 	public class SFX {
 		
-		[Embed(source = "../../assets/sfx/vmml/song-demo.txt", mimeType = "application/octet-stream")]		private var song_demo:Class;
+		//[Embed(source = "../../assets/sfx/vmml/song-demo.txt", mimeType = "application/octet-stream")]		private var song_demo:Class;
+		[Embed(source = "../../assets/sfx/vmml/song01.txt", mimeType = "application/octet-stream")]		private var song01_vmml:Class;
 		
 		static public const self:SFX = new SFX();
 		
@@ -75,7 +76,7 @@ package utils {
 			driver.volume = songVol;
 			
 			// loads demo
-			tmp = new song_demo;
+			tmp = new song01_vmml;
 			buf = "";
 			arr = tmp.split("\n");
 			for each (tmp in arr) {

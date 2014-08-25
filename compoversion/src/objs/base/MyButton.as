@@ -16,6 +16,7 @@ package objs.base {
 		private var _pressed:Boolean;
 		private var _waspressed:Boolean;
 		private var hasGFX:Boolean;
+		public var checkBox:Boolean;
 		
 		public function MyButton(X:Number=0, Y:Number=0, SimpleGraphic:Class=null) {
 			super(X, Y, SimpleGraphic);
@@ -24,13 +25,14 @@ package objs.base {
 			_pressed = false;
 			hasGFX = false;
 			makeGraphic(32, 32, 0xff00ff00);
+			checkBox = true;
 		}
 		
 		override public function update():void {
 			_waspressed = _pressed;
 			var over:Boolean = overlapsPoint(FlxG.mouse, true);
 			if (_pressed) {
-				if (over && FlxG.mouse.justPressed()) {
+				if (!checkBox && !FlxG.mouse.pressed() || over && FlxG.mouse.justPressed()) {
 					_pressed = false;
 					state = OVER;
 					setGFX();

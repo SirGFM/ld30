@@ -34,10 +34,6 @@ package objs {
 			minRNGtime = 3;
 		}
 		
-		override public function update():void {
-			super.update();
-		}
-		
 		override public function reset(X:Number, Y:Number):void {
 			super.reset(X, Y);
 			acceleration.y = grav;

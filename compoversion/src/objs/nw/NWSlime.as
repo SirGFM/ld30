@@ -23,6 +23,8 @@ package objs.nw {
 			addAnimation("attack", [2, 2, 3, 3, 3, 4, 5, 4], 8, true);
 			isMeelee = true;
 			maxdist = 24;
+			width = 22;
+			centerOffsets();
 			
 			health = 10;
 			dmg = 1;

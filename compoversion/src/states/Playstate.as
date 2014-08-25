@@ -4,6 +4,8 @@ package states {
 	import objs.base.Projectile;
 	import objs.DWChar;
 	import objs.LWChar;
+	import objs.nw.NWMuchy;
+	import objs.nw.NWPunch;
 	import objs.nw.NWSlime;
 	import org.flixel.FlxCamera;
 	import org.flixel.FlxG;
@@ -46,6 +48,7 @@ package states {
 		
 		override public function create():void {
 			var ent:Entity;
+			
 			global.playstate = this;
 			
 			debugGrp = new FlxGroup();
@@ -367,6 +370,38 @@ package states {
 					e.reset(80 * 16, 25 * 16);
 					numPl = 12;
 				break;
+				case 1:
+					e = recycle(NWMuchy) as Entity;
+					e.reset(101*16, 11*16);
+					e = recycle(NWMuchy) as Entity;
+					e.reset(29*16, 15*16);
+					e = recycle(NWSlime) as Entity;
+					e.reset(6*16, 18*16);
+					e = recycle(NWSlime) as Entity;
+					e.reset(50*16, 19*16);
+					e = recycle(NWSlime) as Entity;
+					e.reset(53*16, 25*16);
+					e = recycle(NWSlime) as Entity;
+					e.reset(77*16, 25*16);
+					e = recycle(NWSlime) as Entity;
+					e.reset(80 * 16, 25 * 16);
+					numPl = 10;
+				break;
+				case 2:
+					e = recycle(NWMuchy) as Entity;
+					e.reset(101*16, 11*16);
+					e = recycle(NWMuchy) as Entity;
+					e.reset(29*16, 15*16);
+					e = recycle(NWMuchy) as Entity;
+					e.reset(6*16, 18*16);
+					e = recycle(NWMuchy) as Entity;
+					e.reset(50*16, 19*16);
+					e = recycle(NWPunch) as Entity;
+					e.reset(53*16, 25*16);
+					e = recycle(NWPunch) as Entity;
+					e.reset(77*16, 25*16);
+					numPl = 7;
+				break;
 				default: {
 					// Last level reached, play ending
 					FlxG.fade(0xff000000, 0.5, function():void { FlxG.switchState(new Endstate()); } );
@@ -381,6 +416,7 @@ package states {
 				e.reset(16 + FlxG.random() * 100 % 64, global.floor - 40);
 				i++;
 			}
+			FlxG.paused = false;
 		}
 		
 		private function onMenu(tm:TextMenu):void {

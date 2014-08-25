@@ -5,7 +5,10 @@ t200
 @2 o2 l8 $
 
 //[f<c>]4[g<d>]4
-[aa<e>a]4[bb<f+>b]4<[ccgc]4><[ccgc]3d^c^>
+[aa<e>a]4
+[bb<f+>b]4
+<[ccgc]4>
+<[ccgc]3d^c^>
 
 ; // [/bass]
 
@@ -14,9 +17,14 @@ t200
 #TABLE 2 { (100, 48)8, (64, 12)8 };
 #TABLE 3 { 50, 24, 44, 20, 40, 16, 36, 12, 32, 8, 28, 4, 24, 0 };
 
-@0 o6 l4 na2 //$
+@0 o6 l8 na2 $
 
 // use na2 for melody and na3 for bg melody
+
+g<ga<c4> ag4e4rd4r4.>
+g<ga<c4> ag4<d4re4r4.>>
+g<ga<c4> ag4e4rd4r4.>
+g<ga<c4> ag4<dddereer>>
 
 ; // [melody]
 

@@ -243,7 +243,14 @@ package objs.base {
 									p = global.playstate.recycle(MeeleeProj) as Projectile;
 								}
 								p.dmg = dmg;
-								p.start(x + width / 2, y + height / 2, facing, _type);
+								if (!isMeelee)
+									p.start(x + width / 2, y + height / 2, facing, _type);
+								else if (facing == RIGHT) {
+									p.start(x + width + 8, y + height / 2, facing, _type);
+								}
+								else if (facing == LEFT) {
+									p.start(x - 8, y + height / 2, facing, _type);
+								}
 							}
 						}
 						else if (!entPath && velocity.x == 0) {

@@ -21,10 +21,6 @@ package objs {
 		
 		override public function start(X:Number, Y:Number, dir:uint, Type:uint):void {
 			reset(X, Y);
-			if (dir == LEFT)
-				x -= 16;
-			else if (dir == RIGHT)
-				x += 16;
 			velocity.x = 0;
 			_type = Type;
 			visible = false;

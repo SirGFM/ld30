@@ -71,12 +71,12 @@ package states {
 			
 			opt = new TextMenu(32, onMenu);
 			if (global.type == Entity.DW) {
-				goodOpt = "...signs that they are battling something";
-				badOpt = "...an aberration used for evil";
+				goodOpt = "Probably not... who knows if they aren't also being invaded...";
+				badOpt = "It looks like something that they would do...";
 			}
 			else {
-				goodOpt = "...something not worth of our attention";
-				badOpt = "...proof of battle prowess and bloodlust";
+				goodOpt = "Don't seems like it... they would have been better prepared...";
+				badOpt = "This invasion stinks Dark'an, I tell you.";
 			}
 			opt.addOption(new Option(goodOpt, 16));
 			opt.addOption(new Option(badOpt, 16));
@@ -150,12 +150,10 @@ package states {
 					break;
 					case 6:
 						if (global.type == Entity.DW) {
-							plgMngr.textWindow.wakeup("This undentified thing was found. We think it might belong to the Light'ans.");
-							plgMngr.textWindow.wakeup("Interesting... it seems like...");
+							plgMngr.textWindow.wakeup("About the invasion... have you got any clues if the Light'ans were indeed involved?");
 						}
 						else {
-							plgMngr.textWindow.wakeup("This alien device was found on battle grounds. Most likely a Dark'an belonging.");
-							plgMngr.textWindow.wakeup("I say this should be...");
+							plgMngr.textWindow.wakeup("What do ou say about those Dark'ans bastard? Think it was them that lured those creatures?");
 						}
 					break;
 					case 7:
@@ -210,14 +208,21 @@ package states {
 						}
 					break;
 					case 5:
+						state++;
+						doRun = true;
+						/*
 						token.alpha += FlxG.elapsed/2;
 						time += FlxG.elapsed;
 						if (time >= 2) {
 							state++;
 							doRun = true;
 						}
+						*/
 					break;
 					case 8:
+						state++;
+						doRun = true;
+						/*
 						token.alpha -= FlxG.elapsed/2;
 						time += FlxG.elapsed;
 						if (time >= 2) {
@@ -225,6 +230,7 @@ package states {
 							state++;
 							doRun = true;
 						}
+						*/
 					break;
 					case 10:
 						minion.alpha -= FlxG.elapsed/2;
