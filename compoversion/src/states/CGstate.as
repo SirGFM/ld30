@@ -219,6 +219,9 @@ package states {
 						}
 						*/
 					break;
+					case 7:
+						time += FlxG.elapsed;
+					break;
 					case 8:
 						state++;
 						doRun = true;
